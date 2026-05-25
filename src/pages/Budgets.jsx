@@ -14,6 +14,13 @@ export default function Budgets() {
   const [showAlert, setShowAlert] = React.useState(false);
   const [exceededCategories, setExceededCategories] = React.useState([]);
   const { transactions, currency } = React.useContext(DataContext);
+  const spending = transactions
+    ?.filter((t) => Number(t.Amount) < 0)
+    .reduce((acc, item) => {
+      const category = categorize(item.Description);
+      acc[category] = (acc[category] || 0) + Math.abs(Number(item.Amount));
+      return acc;
+    }, {});
 
   // Save budgets to localStorage whenever they change
   React.useEffect(() => {
@@ -37,15 +44,8 @@ export default function Budgets() {
     if (exceeded.length > 0) {
       setShowAlert(true);
     }
-  }, [budgets, transactions]);
+  }, [budgets, transactions, spending]);
 
-  const spending = transactions
-    ?.filter((t) => Number(t.Amount) < 0)
-    .reduce((acc, item) => {
-      const category = categorize(item.Description);
-      acc[category] = (acc[category] || 0) + Math.abs(Number(item.Amount));
-      return acc;
-    }, {});
   const categories = Object.keys(spending || {});
 
   // Prepare comparison chart data
