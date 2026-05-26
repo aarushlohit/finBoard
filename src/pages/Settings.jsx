@@ -125,6 +125,7 @@ export default function CSVParser() {
       Date: manualTransaction.Date,
       Description: manualTransaction.Description,
       Amount: manualTransaction.Amount,
+      Currency: currency,
     };
 
     const updatedTransactions = [
