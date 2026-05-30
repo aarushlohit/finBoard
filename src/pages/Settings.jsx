@@ -8,12 +8,7 @@ import { useModal } from "../context/ModalContext";
 // =========================
 // REUSABLE SECTION COMPONENT
 // =========================
-const Section = ({
-  title,
-  subtitle,
-  children,
-  right,
-}) => (
+const Section = ({ title, subtitle, children, right }) => (
   <div className="w-full rounded-[24px] border border-[#222] bg-[#141414] p-6 md:p-8 transition-all duration-300 hover:border-[#FF6B00]/30 hover:shadow-[0_0_20px_rgba(255,107,0,0.05)]">
 
     <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
@@ -37,6 +32,19 @@ const Section = ({
   </div>
 );
 
+// Category options matching the app's category system
+const CATEGORIES = [
+  "Food",
+  "Shopping",
+  "Bills",
+  "Health",
+  "Transport",
+  "Entertainment",
+  "Education",
+  "Travel",
+  "Other",
+];
+
 export default function Settings() {
   const {
     transactions,
@@ -56,10 +64,11 @@ export default function Settings() {
     Date: format(new Date(), "dd/MM/yyyy"),
     Description: "",
     Amount: "",
+    Category: "Other",
   });
 
   // =========================
-  // CSV IMPORT (FIXED + SAFE)
+  // CSV IMPORT
   // =========================
   const handleFile = (e) => {
     const file = e.target.files[0];
@@ -73,10 +82,7 @@ export default function Settings() {
 
       complete: (results) => {
         const parsedData = (results.data || []).filter(
-          (row) =>
-            row?.Date &&
-            row?.Description &&
-            row?.Amount
+          (row) => row?.Date && row?.Description && row?.Amount
         );
 
         if (parsedData.length === 0) {
@@ -89,9 +95,7 @@ export default function Settings() {
         }
 
         const requiredKeys = ["Date", "Description", "Amount", "Category"];
-        const hasAllKeys = requiredKeys.every(
-          (key) => key in parsedData[0]
-        );
+        const hasAllKeys = requiredKeys.every((key) => key in parsedData[0]);
 
         if (!hasAllKeys) {
           setLoading(false);
@@ -117,15 +121,10 @@ export default function Settings() {
             : normalizedData;
 
         setTransactions(updatedData);
-
-        localStorage.setItem(
-          "transactions",
-          JSON.stringify(updatedData)
-        );
+        localStorage.setItem("transactions", JSON.stringify(updatedData));
 
         setLoading(false);
         setSuccessMessage("CSV Imported Successfully!");
-
         setTimeout(() => setSuccessMessage(""), 3000);
       },
 
@@ -142,7 +141,7 @@ export default function Settings() {
   };
 
   // =========================
-  // MANUAL ENTRY (SAFE DATE FIX)
+  // MANUAL ENTRY
   // =========================
   const handleManualSubmit = (e) => {
     e.preventDefault();
@@ -152,10 +151,7 @@ export default function Settings() {
       !manualTransaction.Description ||
       !manualTransaction.Amount
     ) {
-      showModal({
-        type: "alert",
-        message: "Please fill all fields",
-      });
+      showModal({ type: "alert", message: "Please fill all fields" });
       return;
     }
 
@@ -164,25 +160,20 @@ export default function Settings() {
       {
         ...manualTransaction,
         Currency: currency,
-        Category: "Uncategorized",
       },
     ];
 
     setTransactions(updatedTransactions);
-
-    localStorage.setItem(
-      "transactions",
-      JSON.stringify(updatedTransactions)
-    );
+    localStorage.setItem("transactions", JSON.stringify(updatedTransactions));
 
     setManualTransaction({
       Date: format(new Date(), "dd/MM/yyyy"),
       Description: "",
       Amount: "",
+      Category: "Other",
     });
 
     setSuccessMessage("Transaction Added!");
-
     setTimeout(() => setSuccessMessage(""), 3000);
   };
 
@@ -193,7 +184,6 @@ export default function Settings() {
       onConfirm: () => {
         setTransactions([]);
         localStorage.removeItem("transactions");
-
         setSuccessMessage("All Data Cleared!");
         setTimeout(() => setSuccessMessage(""), 3000);
       },
@@ -221,7 +211,6 @@ export default function Settings() {
         subtitle="Upload CSV or load demo financial data"
         right={
           <div className="flex overflow-hidden rounded-xl border border-[#222] self-start">
-
             {["replace", "append"].map((mode) => (
               <button
                 key={mode}
@@ -239,7 +228,6 @@ export default function Settings() {
         }
       >
         <div className="flex flex-col gap-4 xl:flex-row xl:items-end">
-
           <input
             type="file"
             accept=".csv"
@@ -255,11 +243,7 @@ export default function Settings() {
                   : demoData;
 
               setTransactions(updated);
-              localStorage.setItem(
-                "transactions",
-                JSON.stringify(updated)
-              );
-
+              localStorage.setItem("transactions", JSON.stringify(updated));
               setSuccessMessage("Demo Data Loaded!");
               setTimeout(() => setSuccessMessage(""), 3000);
             }}
@@ -286,40 +270,56 @@ export default function Settings() {
         {showManualEntry && (
           <form onSubmit={handleManualSubmit} className="space-y-6">
 
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
 
-              {/* DATE */}
+              {/* DATE — Fix: no UTC parsing, split directly */}
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase text-gray-500">
                   Date
                 </label>
-
                 <input
                   type="date"
                   required
+                  // Fix 1: avoid new Date() UTC shift — split dd/MM/yyyy directly to yyyy-MM-dd
                   value={
                     manualTransaction.Date
-                      ? format(
-                          new Date(
-                            manualTransaction.Date.split("/").reverse().join("-")
-                          ),
-                          "yyyy-MM-dd"
-                        )
+                      ? manualTransaction.Date.split("/").reverse().join("-")
                       : ""
                   }
                   onChange={(e) => {
                     if (!e.target.value) return;
-
-                    const d = new Date(e.target.value);
-                    if (isNaN(d.getTime())) return;
-
+                    // Fix 2: parse parts directly, no new Date() to avoid UTC shift
+                    const [year, month, day] = e.target.value.split("-");
                     setManualTransaction({
                       ...manualTransaction,
-                      Date: format(d, "dd/MM/yyyy"),
+                      Date: `${day}/${month}/${year}`,
                     });
                   }}
                   className="w-full rounded-xl border border-[#222] bg-[#111] p-4 text-white"
                 />
+              </div>
+
+              {/* CATEGORY — Fix: added back, was missing */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold uppercase text-gray-500">
+                  Category
+                </label>
+                <select
+                  value={manualTransaction.Category}
+                  onChange={(e) =>
+                    setManualTransaction({
+                      ...manualTransaction,
+                      Category: e.target.value,
+                    })
+                  }
+                  className="w-full rounded-xl border border-[#222] bg-[#111] p-4 text-white"
+                >
+                  {CATEGORIES.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* DESCRIPTION */}
@@ -327,7 +327,6 @@ export default function Settings() {
                 <label className="text-xs font-bold uppercase text-gray-500">
                   Description
                 </label>
-
                 <input
                   type="text"
                   required
@@ -343,16 +342,16 @@ export default function Settings() {
                 />
               </div>
 
-              {/* AMOUNT */}
+              {/* AMOUNT — Fix: step="0.01" added back for decimal support */}
               <div className="space-y-2">
                 <label className="text-xs font-bold uppercase text-gray-500">
                   Amount
                 </label>
-
                 <input
                   type="number"
                   required
-                  placeholder="Enter amount"
+                  step="0.01"
+                  placeholder="e.g., -450 or 5000"
                   value={manualTransaction.Amount}
                   onChange={(e) =>
                     setManualTransaction({
@@ -390,9 +389,7 @@ export default function Settings() {
         <select
           value={currency?.code || ""}
           onChange={(e) => {
-            const selected = CURRENCIES.find(
-              (c) => c.code === e.target.value
-            );
+            const selected = CURRENCIES.find((c) => c.code === e.target.value);
             if (selected) updateCurrency(selected);
           }}
           className="w-full rounded-xl border border-[#222] bg-[#111] p-4 text-white"
