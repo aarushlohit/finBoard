@@ -1,8 +1,14 @@
 import { Link, useLocation } from "react-router-dom";
-import finbGif from "../../assets/finb.gif";
-import { LayoutDashboard, PiggyBank, ArrowLeftRight, BarChart2, Settings, Target} from "lucide-react";
 import finbGif from "../../assets/finboard.gif";
-import { LayoutDashboard, PiggyBank, ArrowLeftRight, BarChart2, Settings } from "lucide-react";
+
+import {
+  LayoutDashboard,
+  PiggyBank,
+  ArrowLeftRight,
+  BarChart2,
+  Settings,
+  Target,
+} from "lucide-react";
 
 export default function Sidebar() {
   const location = useLocation();
