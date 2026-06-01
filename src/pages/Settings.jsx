@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import Papa from "papaparse";
 import { DataContext, CURRENCIES } from "../context/AppContext";
 import { demoData } from "../data/demoData";
+import { normalizeTransaction, normalizeTransactions } from "../lib/transactionNormalizer";
 import { format } from "date-fns";
 import { useModal } from "../context/ModalContext";
 
@@ -108,13 +109,16 @@ export default function Settings() {
           return;
         }
 
-        const normalizedData = parsedData.map((item) => ({
+        const mapped = parsedData.map((item) => ({
           Date: item.Date,
           Description: item.Description,
           Amount: item.Amount,
           Category: item.Category,
           Currency: currency,
+          source: 'csv',
         }));
+
+        const normalizedData = normalizeTransactions(mapped, { currency, source: 'csv' });
 
         const updatedData =
           importMode === "append"
@@ -164,6 +168,7 @@ export default function Settings() {
         : Math.abs(Number(manualTransaction.Amount)),
       category: manualTransaction.Category,
       Currency: currency,
+      source: 'manual',
     };
 
     addTransaction(newTransaction);
@@ -238,17 +243,17 @@ export default function Settings() {
           />
 
           <button
-            onClick={() => {
-              const updated =
-                importMode === "append"
-                  ? [...(transactions || []), ...demoData]
-                  : demoData;
+              onClick={() => {
+                const mapped = demoData.map((d) => ({ ...d, source: 'demo' }));
+                const normalized = normalizeTransactions(mapped, { currency, source: 'demo' });
 
-              setTransactions(updated);
-              localStorage.setItem("transactions", JSON.stringify(updated));
-              setSuccessMessage("Demo Data Loaded!");
-              setTimeout(() => setSuccessMessage(""), 3000);
-            }}
+                const updated = importMode === "append" ? [...(transactions || []), ...normalized] : normalized;
+
+                setTransactions(updated);
+                localStorage.setItem("transactions", JSON.stringify(updated));
+                setSuccessMessage("Demo Data Loaded!");
+                setTimeout(() => setSuccessMessage(""), 3000);
+              }}
             className="h-[48px] min-w-[240px] rounded-xl bg-[#FF6B00] px-8 text-sm font-black uppercase text-black"
           >
             Load Demo Data

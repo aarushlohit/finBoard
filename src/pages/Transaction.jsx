@@ -179,7 +179,7 @@ export default function Transaction() {
 
     if (searchTerm) {
       indexed = indexed.filter(({ t }) =>
-        t.Description.toLowerCase().includes(searchTerm.toLowerCase())
+        (t.Description || t.description || '').toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
@@ -188,7 +188,7 @@ export default function Transaction() {
       if (dateRange) {
         indexed = indexed.filter(({ t }) => {
           try {
-            const transactionDate = parse(t.Date, "dd/MM/yyyy", new Date());
+            const transactionDate = parse(t.Date || t.date, "dd/MM/yyyy", new Date());
             return transactionDate >= dateRange.start && transactionDate <= dateRange.end;
           } catch {
             return true;
@@ -199,7 +199,7 @@ export default function Transaction() {
 
     if (selectedCategories.length > 0) {
       indexed = indexed.filter(({ t }) =>
-        selectedCategories.includes(t.category || categorize(t.Description))
+        selectedCategories.includes(t.category || t.Category || categorize(t.Description))
       );
     }
 
@@ -215,15 +215,15 @@ export default function Transaction() {
     indexed.sort((a, b) => {
       switch (sortBy) {
         case "date-asc":
-          return parse(a.t.Date, "dd/MM/yyyy", new Date()) - parse(b.t.Date, "dd/MM/yyyy", new Date());
+          return parse(a.t.Date || a.t.date, "dd/MM/yyyy", new Date()) - parse(b.t.Date || b.t.date, "dd/MM/yyyy", new Date());
         case "date-desc":
-          return parse(b.t.Date, "dd/MM/yyyy", new Date()) - parse(a.t.Date, "dd/MM/yyyy", new Date());
+          return parse(b.t.Date || b.t.date, "dd/MM/yyyy", new Date()) - parse(a.t.Date || a.t.date, "dd/MM/yyyy", new Date());
         case "amount-asc":
           return Number(a.t.Amount) - Number(b.t.Amount);
         case "amount-desc":
           return Number(b.t.Amount) - Number(a.t.Amount);
         case "category":
-          return (a.t.category || categorize(a.t.Description)).localeCompare(b.t.category || categorize(b.t.Description));
+          return (a.t.category || a.t.Category || categorize(a.t.Description)).localeCompare(b.t.category || b.t.Category || categorize(b.t.Description));
         default:
           return 0;
       }

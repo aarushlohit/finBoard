@@ -1,4 +1,5 @@
 import React from 'react'
+import normalizeTransaction, { normalizeTransactions } from '../lib/transactionNormalizer';
 
 export const DataContext = React.createContext();
 
@@ -54,6 +55,26 @@ export function AppContext({ children }) {
       .catch(err => console.error(err));
   }, []);
 
+  // Normalize any stored transactions on mount so the app uses a consistent schema
+  React.useEffect(() => {
+    try {
+      const stored = readLocalStorageJSON('transactions', []);
+      if (Array.isArray(stored) && stored.length > 0) {
+        const normalized = normalizeTransactions(stored, { currency });
+        // Only write back if normalization changed (basic length check suffices here)
+        if (JSON.stringify(normalized) !== JSON.stringify(stored)) {
+          setTransactions(normalized);
+          localStorage.setItem('transactions', JSON.stringify(normalized));
+        }
+      }
+    } catch (e) {
+      // ignore normalization failures
+      console.error('Normalization failed', e);
+    }
+    // run once on mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const updateCurrency = async (selectedCurrency) => {
     if (selectedCurrency.code === currency.code) return;
 
@@ -78,10 +99,11 @@ export function AppContext({ children }) {
         symbol: currencySymbols[selectedCurrency.code] || selectedCurrency.symbol,
       };
 
-      const convertedTransactions = transactions.map((t) => ({
-        ...t,
-        Amount: (Number(t.Amount) * rate).toFixed(2),
-      }));
+      const convertedTransactions = transactions.map((t) => {
+        const amt = (Number(t.Amount) * rate).toFixed(2);
+        // normalize each transaction after applying conversion
+        return normalizeTransaction({ ...t, Amount: amt }, { currency: enrichedCurrency, source: t.source || 'conversion' });
+      });
 
       setTransactions(convertedTransactions);
       localStorage.setItem('transactions', JSON.stringify(convertedTransactions));
@@ -102,13 +124,15 @@ export function AppContext({ children }) {
   };
 
   const addTransaction = (newTransaction) => {
-    const updated = [...(transactions || []), newTransaction];
+    const normalized = normalizeTransaction(newTransaction, { currency, source: 'manual' });
+    const updated = [...(transactions || []), normalized];
     setTransactions(updated);
     localStorage.setItem('transactions', JSON.stringify(updated));
   };
 
   const updateTransaction = (index, updatedTransaction) => {
-    const updated = transactions.map((t, i) => (i === index ? updatedTransaction : t));
+    const normalized = normalizeTransaction(updatedTransaction, { currency, source: 'edit' });
+    const updated = transactions.map((t, i) => (i === index ? normalized : t));
     setTransactions(updated);
     localStorage.setItem('transactions', JSON.stringify(updated));
   };
