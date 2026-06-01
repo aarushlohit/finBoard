@@ -267,6 +267,170 @@ body[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
   background: var(--color-fin-accent);
 }
 
+/* ── Light mode profile styling ──────────────────────────────────────────────── */
+body[data-theme="light"] .profile-avatar {
+  color: #ffffff;
+  background: linear-gradient(135deg, var(--color-fin-accent) 0%, var(--color-fin-accent-strong) 100%);
+  box-shadow: 0 2px 8px rgba(var(--color-fin-accent-rgb), 0.3);
+}
+
+body[data-theme="light"] .profile-trigger {
+  background: rgba(139, 92, 246, 0.05);
+}
+
+body[data-theme="light"] .profile-trigger:hover {
+  border-color: rgba(139, 92, 246, 0.3);
+  background: rgba(139, 92, 246, 0.1);
+}
+
+body[data-theme="light"] .profile-name {
+  color: var(--color-fin-text);
+}
+
+body[data-theme="light"] .profile-dropdown {
+  background: linear-gradient(145deg, #f7f3ff 0%, #f0e8ff 100%);
+  border: 1px solid var(--color-fin-border);
+  box-shadow:
+    0 16px 48px rgba(139, 92, 246, 0.12),
+    0 0 0 1px rgba(139, 92, 246, 0.08);
+}
+
+body[data-theme="light"] .profile-dropdown::before {
+  display: none;
+}
+
+body[data-theme="light"] .profile-dropdown-header {
+  border-bottom: 1px solid var(--color-fin-border);
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+body[data-theme="light"] .profile-dropdown-name {
+  color: var(--color-fin-text);
+}
+
+body[data-theme="light"] .profile-dropdown-email {
+  color: var(--color-fin-muted);
+}
+
+body[data-theme="light"] .profile-dropdown-divider {
+  display: none;
+}
+
+body[data-theme="light"] .profile-dropdown-item {
+  color: var(--color-fin-muted);
+}
+
+body[data-theme="light"] .profile-dropdown-item:hover {
+  background: rgba(139, 92, 246, 0.08);
+  color: var(--color-fin-text);
+}
+
+/* ── Light mode: Override hardcoded dark colors in components ──────────────── */
+
+/* Fix: Input fields with dark background in light mode */
+body[data-theme="light"] input,
+body[data-theme="light"] select,
+body[data-theme="light"] textarea {
+  background-color: white !important;
+  color: var(--color-fin-text) !important;
+  border-color: var(--color-fin-border) !important;
+}
+
+body[data-theme="light"] input:focus,
+body[data-theme="light"] select:focus,
+body[data-theme="light"] textarea:focus {
+  background-color: white !important;
+  border-color: var(--color-fin-accent) !important;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1) !important;
+}
+
+body[data-theme="light"] input::placeholder,
+body[data-theme="light"] textarea::placeholder {
+  color: var(--color-fin-muted) !important;
+}
+
+/* Ensure option elements display correctly */
+body[data-theme="light"] option {
+  background-color: white !important;
+  color: var(--color-fin-text) !important;
+}
+
+/* Fix: Div elements with dark backgrounds (cards, sections) */
+body[data-theme="light"] div[class*="bg-\[#111\]"],
+body[data-theme="light"] div[class*="bg-\[#141414\]"] {
+  background-color: var(--color-fin-surface-2) !important;
+  color: var(--color-fin-text) !important;
+  border-color: var(--color-fin-border) !important;
+}
+
+/* Fix: Borders with dark color */
+body[data-theme="light"] div[class*="border-\[#222\]"],
+body[data-theme="light"] div[class*="border-\[#2a2a2a\]"],
+body[data-theme="light"] input[class*="border-\[#222\]"],
+body[data-theme="light"] input[class*="border-\[#2a2a2a\]"],
+body[data-theme="light"] select[class*="border-\[#222\]"],
+body[data-theme="light"] select[class*="border-\[#2a2a2a\]"] {
+  border-color: var(--color-fin-border) !important;
+}
+
+/* Fix: Text colors in light mode */
+body[data-theme="light"] h1[class*="text-white"],
+body[data-theme="light"] h2[class*="text-white"],
+body[data-theme="light"] h3[class*="text-white"],
+body[data-theme="light"] span[class*="text-white"],
+body[data-theme="light"] p[class*="text-white"],
+body[data-theme="light"] label[class*="text-white"] {
+  color: var(--color-fin-text) !important;
+}
+
+/* Fix: Orange text (like section titles) should use theme accent in light mode */
+body[data-theme="light"] h2[class*="text-\[#FF6B00\]"],
+body[data-theme="light"] [class*="text-\[#FF6B00\]"] {
+  color: var(--color-fin-accent) !important;
+}
+
+/* Fix: Buttons with text-black should show appropriate text color */
+body[data-theme="light"] button.text-black,
+body[data-theme="light"] button[class*="text-black"] {
+  color: white !important;
+}
+
+/* Fix: File inputs */
+body[data-theme="light"] .file-input {
+  background-color: white !important;
+  color: var(--color-fin-text) !important;
+  border-color: var(--color-fin-border) !important;
+}
+
+/* Fix: Dark background boxes in Goals (CURRENT SAVINGS BANNER) */
+body[data-theme="light"] div[class*="bg-\[#0a1a12\]"],
+body[data-theme="light"] div[class*="bg-\[#0a0a0a\]"] {
+  background-color: var(--color-fin-surface-2) !important;
+  color: var(--color-fin-text) !important;
+}
+
+/* Fix: Zinc/gray text colors in insights in light mode */
+body[data-theme="light"] .text-zinc-300 {
+  color: var(--color-fin-text) !important;
+}
+
+body[data-theme="light"] .text-zinc-500,
+body[data-theme="light"] .text-zinc-600 {
+  color: var(--color-fin-muted) !important;
+}
+
+/* Fix: Progress bar background in light mode */
+body[data-theme="light"] div.bg-zinc-900 {
+  background-color: #e5ddf7 !important;
+  border-color: #d2c2ef !important;
+}
+
+/* Fix: Scrollbar color in light mode */
+body[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: #d2c2ef !important;
+}
+
 .fin-card {
   border: 1px solid var(--color-fin-border-soft);
   border-radius: 16px;

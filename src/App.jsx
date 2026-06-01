@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import Budgets from "./pages/Budgets";
+import Goals from "./pages/Goals";
 import Settings from "./pages/Settings";
 import Transaction from "./pages/Transaction";
 import InsightsDashboard from "./pages/InsightsDashboard"; 
@@ -44,28 +45,29 @@ export default function App() {
                   />
                   <Route path="/reset-password" element={<ResetPassword />} />
 
-                  {/* ── Protected routes  */}
-                  <Route
-                    path="/"
-                    element={
-                      <ProtectedRoute>
-                        <Layout />
-                      </ProtectedRoute>
-                    }
-                  >
-                    <Route index element={<Dashboard />} />
-                    <Route path="dashboard" element={<Dashboard />} />
-                    <Route path="budgets" element={<Budgets />} />
-                    <Route path="settings" element={<Settings />} />
-                    <Route path="transaction" element={<Transaction />} />
-                    <Route path="insights" element={<InsightsDashboard />} />
-                  </Route>
-                </Routes>
-              </BrowserRouter>
-              <Modal />
-            </ModalProvider>
-          </AppContext>
-        </AuthProvider>
+                {/* ── Protected routes  */}
+                <Route
+                  path="/"
+                  element={
+                    <ProtectedRoute>
+                      <Layout />
+                    </ProtectedRoute>
+                  }
+                >
+                  <Route index element={<Dashboard />} />
+                  <Route path="dashboard" element={<Dashboard />} />
+                  <Route path="budgets" element={<Budgets />} />
+                  <Route path="settings" element={<Settings />} />
+                  <Route path="transaction" element={<Transaction />} />
+                  <Route path="insights" element={<InsightsDashboard />} />
+                  <Route path="goals" element={<Goals />} />
+                </Route>
+              </Routes>
+            </BrowserRouter>
+            <Modal />
+          </ModalProvider>
+        </AppContext>
+      </AuthProvider>
       </ThemeProvider>
     </>
   );

@@ -94,17 +94,16 @@ export default function Dashboard() {
 
   const savings = totalIncome + totalExpense;
 
-  const categoryData =
-    transactions
-      ?.filter((t) => Number(t.Amount) < 0)
-      .reduce((acc, item) => {
-        const category = categorize(item.Description);
+    const categoryData =
+      transactions
+        ?.filter((t) => Number(t.Amount) < 0)
+        .reduce((acc, item) => {
+          const category = item.category || item.Category || categorize(item.Description);
 
-        acc[category] =
-          (acc[category] || 0) + Math.abs(Number(item.Amount));
+          acc[category] = (acc[category] || 0) + Math.abs(Number(item.Amount));
 
-        return acc;
-      }, {}) || {};
+          return acc;
+        }, {}) || {};
 
   const chartData = Object.entries(categoryData).map(([name, value]) => ({
     name,

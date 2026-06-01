@@ -9,25 +9,31 @@ export default function CategoryBreakdown({ transactions }) {
     let totalExpenseSum = 0;
 
     transactions.forEach((t) => {
-      const amt = parseFloat(t.Amount) || 0;
+      const amt = Number(t.Amount) || 0;
 
       // Target expense records exclusively
       if (amt < 0) {
         const absAmt = Math.abs(amt);
-        const desc = t.Description ? t.Description.toString().trim().toLowerCase() : "";
-        let categoryKey = "other"; // Default fallback
+        const desc = (t.Description || t.description || '').toString().trim().toLowerCase();
 
-        // Exact budget category sorting keys
-        if (desc.includes("swiggy") || desc.includes("zomato")) {
-          categoryKey = "food";
-        } else if (desc.includes("uber") || desc.includes("petrol")) {
-          categoryKey = "transport";
-        } else if (desc.includes("amazon shopping") || desc.includes("amazon")) {
-          categoryKey = "shopping";
-        } else if (desc.includes("electricity bill")) {
-          categoryKey = "bills";
-        } else if (desc.includes("gym") || desc.includes("membership")) {
-          categoryKey = "health";
+        // Prefer stored category if present
+        let categoryKey = (t.category || t.Category || '').toString().trim().toLowerCase();
+
+        if (!categoryKey) {
+          // Derive from description when no stored category
+          if (desc.includes('swiggy') || desc.includes('zomato')) {
+            categoryKey = 'food';
+          } else if (desc.includes('uber') || desc.includes('petrol')) {
+            categoryKey = 'transport';
+          } else if (desc.includes('amazon shopping') || desc.includes('amazon')) {
+            categoryKey = 'shopping';
+          } else if (desc.includes('electricity bill')) {
+            categoryKey = 'bills';
+          } else if (desc.includes('gym') || desc.includes('membership')) {
+            categoryKey = 'health';
+          } else {
+            categoryKey = 'other';
+          }
         }
 
         totals[categoryKey] = (totals[categoryKey] || 0) + absAmt;
