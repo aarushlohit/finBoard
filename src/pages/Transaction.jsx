@@ -406,7 +406,7 @@ export default function Transaction() {
                 onClick={() => toggleCategory(category)}
                 className={`px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-sm border transition-colors ${
                   selectedCategories.includes(category)
-                    ? "bg-[#FF6B00] text-black border-[#FF6B00]"
+                    ? "bg-[#FF6B00] text-[whitesmoke] border-[#FF6B00]"
                     : "bg-[#1F1F1F] text-gray-300 border-[#2a2a2a] hover:border-[#FF6B00]"
                 }`}
               >
@@ -428,7 +428,7 @@ export default function Transaction() {
         <div className="flex justify-end items-center px-4 pt-4">
           <button
             onClick={exportToCSV}
-            className="px-3 py-2 bg-[#FF6B00] text-black text-sm font-bold rounded-md hover:opacity-90 transition"
+            className="px-3 py-2 bg-[#FF6B00] text-[whitesmoke] text-sm font-bold rounded-md hover:opacity-90 transition"
           >
             Export CSV
           </button>

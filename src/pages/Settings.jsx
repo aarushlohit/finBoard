@@ -219,7 +219,7 @@ export default function Settings() {
                 onClick={() => setImportMode(mode)}
                 className={`h-[42px] px-5 text-xs font-bold uppercase transition-all ${
                   importMode === mode
-                    ? "bg-[#FF6B00] text-black"
+                    ? "bg-[#FF6B00] text-[whitesmoke]"
                     : "bg-[#111] text-gray-400 hover:text-white"
                 }`}
               >
@@ -249,7 +249,7 @@ export default function Settings() {
               setSuccessMessage("Demo Data Loaded!");
               setTimeout(() => setSuccessMessage(""), 3000);
             }}
-            className="h-[48px] min-w-[240px] rounded-xl bg-[#FF6B00] px-8 text-sm font-black uppercase text-black"
+            className="h-[48px] min-w-[240px] rounded-xl bg-[#FF6B00] px-8 text-sm font-black uppercase text-[whitesmoke]"
           >
             Load Demo Data
           </button>
@@ -263,7 +263,7 @@ export default function Settings() {
         right={
           <button
             onClick={() => setShowManualEntry(!showManualEntry)}
-            className="rounded-xl border border-[#222] px-5 py-2 text-sm font-semibold uppercase text-gray-400"
+            className="rounded-xl border border-[#222] px-5 py-2 text-sm font-semibold uppercase text-[whitesmoke]"
           >
             {showManualEntry ? "Hide Form" : "Show Form"}
           </button>
@@ -400,7 +400,7 @@ export default function Settings() {
             <div className="flex gap-3">
               <button
                 type="submit"
-                className="rounded-xl bg-[#FF6B00] px-7 py-3 font-black uppercase text-black"
+                className="rounded-xl bg-[#FF6B00] px-7 py-3 font-black uppercase text-[whitesmoke]"
               >
                 Add Transaction
               </button>
