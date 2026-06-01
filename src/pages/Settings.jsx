@@ -9,12 +9,12 @@ import { useModal } from "../context/ModalContext";
 // REUSABLE SECTION COMPONENT
 // =========================
 const Section = ({ title, subtitle, children, right }) => (
-  <div className="w-full rounded-[24px] border border-[#222] bg-[#141414] p-6 md:p-8 transition-all duration-300 hover:border-[#FF6B00]/30 hover:shadow-[0_0_20px_rgba(255,107,0,0.05)]">
+  <div className="responsive-card w-full rounded-[18px] sm:rounded-[24px] border border-[#222] bg-[#141414] p-4 sm:p-6 md:p-8 transition-all duration-300 hover:border-[#FF6B00]/30 hover:shadow-[0_0_20px_rgba(255,107,0,0.05)]">
 
-    <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+    <div className="mb-6 sm:mb-8 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
 
-      <div className="space-y-2">
-        <h2 className="text-[28px] font-black uppercase tracking-[0.22em] text-[#FF6B00]">
+      <div className="min-w-0 space-y-2">
+        <h2 className="break-words text-xl sm:text-[28px] font-black uppercase tracking-[0.12em] sm:tracking-[0.22em] text-[#FF6B00]">
           {title}
         </h2>
 
@@ -193,7 +193,7 @@ export default function Settings() {
   };
 
   return (
-    <div className="w-full space-y-6">
+    <div className="responsive-page w-full space-y-6">
 
       {successMessage && (
         <div className="rounded-2xl border border-[#FF6B00]/30 bg-[#111] px-5 py-4 text-sm font-bold tracking-wide text-[#FF6B00] uppercase">
@@ -217,7 +217,7 @@ export default function Settings() {
               <button
                 key={mode}
                 onClick={() => setImportMode(mode)}
-                className={`h-[42px] px-5 text-xs font-bold uppercase transition-all ${
+                className={`min-h-11 px-5 text-xs font-bold uppercase transition-all ${
                   importMode === mode
                     ? "bg-[#FF6B00] text-black"
                     : "bg-[#111] text-gray-400 hover:text-white"
@@ -234,7 +234,7 @@ export default function Settings() {
             type="file"
             accept=".csv"
             onChange={handleFile}
-            className="file-input h-[48px] w-full rounded-xl border border-[#222] bg-[#111] text-white"
+            className="file-input min-h-12 w-full rounded-xl border border-[#222] bg-[#111] text-white"
           />
 
           <button
@@ -249,7 +249,7 @@ export default function Settings() {
               setSuccessMessage("Demo Data Loaded!");
               setTimeout(() => setSuccessMessage(""), 3000);
             }}
-            className="h-[48px] min-w-[240px] rounded-xl bg-[#FF6B00] px-8 text-sm font-black uppercase text-black"
+            className="min-h-12 w-full rounded-xl bg-[#FF6B00] px-8 text-sm font-black uppercase text-black xl:w-auto xl:min-w-[240px]"
           >
             Load Demo Data
           </button>
@@ -263,7 +263,7 @@ export default function Settings() {
         right={
           <button
             onClick={() => setShowManualEntry(!showManualEntry)}
-            className="rounded-xl border border-[#222] px-5 py-2 text-sm font-semibold uppercase text-gray-400"
+            className="responsive-control rounded-xl border border-[#222] px-5 py-2 text-sm font-semibold uppercase text-gray-400"
           >
             {showManualEntry ? "Hide Form" : "Show Form"}
           </button>
@@ -297,7 +297,7 @@ export default function Settings() {
                       Date: `${day}/${month}/${year}`,
                     });
                   }}
-                  className="w-full rounded-xl border border-[#222] bg-[#111] p-4 text-white"
+                  className="responsive-control w-full rounded-xl border border-[#222] bg-[#111] p-4 text-white"
                 />
               </div>
 
@@ -314,7 +314,7 @@ export default function Settings() {
                       Category: e.target.value,
                     })
                   }
-                  className="w-full rounded-xl border border-[#222] bg-[#111] p-4 text-white"
+                  className="responsive-control w-full rounded-xl border border-[#222] bg-[#111] p-4 text-white"
                 >
                   {CATEGORIES.map((cat) => (
                     <option key={cat} value={cat}>
@@ -340,7 +340,7 @@ export default function Settings() {
                       Description: e.target.value,
                     })
                   }
-                  className="w-full rounded-xl border border-[#222] bg-[#111] p-4 text-white"
+                  className="responsive-control w-full rounded-xl border border-[#222] bg-[#111] p-4 text-white"
                 />
               </div>
 
@@ -353,7 +353,7 @@ export default function Settings() {
                   <button
                     type="button"
                     onClick={() => setTransactionType("expense")}
-                    className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider transition-colors ${
+                    className={`flex-1 min-h-11 py-3 text-sm font-bold uppercase tracking-wider transition-colors ${
                       transactionType === "expense"
                         ? "bg-[#FF6B6B] text-white"
                         : "bg-[#111] text-gray-400 hover:text-white"
@@ -364,7 +364,7 @@ export default function Settings() {
                   <button
                     type="button"
                     onClick={() => setTransactionType("income")}
-                    className={`flex-1 py-3 text-sm font-bold uppercase tracking-wider transition-colors ${
+                    className={`flex-1 min-h-11 py-3 text-sm font-bold uppercase tracking-wider transition-colors ${
                       transactionType === "income"
                         ? "bg-[#00C49F] text-white"
                         : "bg-[#111] text-gray-400 hover:text-white"
@@ -392,15 +392,15 @@ export default function Settings() {
                       Amount: e.target.value,
                     })
                   }
-                  className="w-full rounded-xl border border-[#222] bg-[#111] p-4 text-white"
+                  className="responsive-control w-full rounded-xl border border-[#222] bg-[#111] p-4 text-white"
                 />
               </div>
             </div>
 
-            <div className="flex gap-3">
+            <div className="responsive-actions">
               <button
                 type="submit"
-                className="rounded-xl bg-[#FF6B00] px-7 py-3 font-black uppercase text-black"
+                className="responsive-control rounded-xl bg-[#FF6B00] px-7 py-3 font-black uppercase text-black"
               >
                 Add Transaction
               </button>
@@ -408,7 +408,7 @@ export default function Settings() {
               <button
                 type="button"
                 onClick={clearAllData}
-                className="rounded-xl border border-red-500/40 px-7 py-3 font-black uppercase text-red-400"
+                className="responsive-control rounded-xl border border-red-500/40 px-7 py-3 font-black uppercase text-red-400"
               >
                 Clear Data
               </button>
@@ -425,7 +425,7 @@ export default function Settings() {
             const selected = CURRENCIES.find((c) => c.code === e.target.value);
             if (selected) updateCurrency(selected);
           }}
-          className="w-full rounded-xl border border-[#222] bg-[#111] p-4 text-white"
+          className="responsive-control w-full rounded-xl border border-[#222] bg-[#111] p-4 text-white"
         >
           {CURRENCIES.map((c) => (
             <option key={c.code} value={c.code}>

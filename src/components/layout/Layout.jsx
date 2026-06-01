@@ -7,9 +7,9 @@ export default function Layout() {
   const { authError, clearAuthError } = useAuth();
 
   return (
-    <div className="drawer lg:drawer-open text-white h-screen overflow-hidden">
+    <div className="drawer lg:drawer-open text-white app-shell overflow-hidden">
       <input id="mobile-drawer" type="checkbox" className="drawer-toggle" />
-      <div className="drawer-content flex flex-col flex-1 h-screen overflow-hidden">
+      <div className="drawer-content flex flex-col flex-1 min-h-0 app-shell overflow-hidden">
         <Header />
         {authError && (
           <div className="px-4 md:px-8 pt-4">
@@ -22,7 +22,7 @@ export default function Layout() {
             </div>
           </div>
         )}
-        <main className="flex-1 overflow-y-auto p-4 md:p-8">
+        <main className="app-main flex-1 overflow-y-auto p-4 md:p-8">
           <Outlet />
         </main>
       </div> 

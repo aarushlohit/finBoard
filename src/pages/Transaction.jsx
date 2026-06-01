@@ -4,7 +4,6 @@ import { DataContext } from "../context/AppContext";
 import { useModal } from "../context/ModalContext";
 import categorize from "../components/utils/categorize";
 import { parse } from "date-fns";
-import { useState } from "react";
 
 const categoryIcons = {
   Food: "🍔",
@@ -17,6 +16,17 @@ const categoryIcons = {
   Other: "📌",
 };
 
+const DEFAULT_CATEGORIES = [
+  "Food",
+  "Transport",
+  "Shopping",
+  "Income",
+  "Bills",
+  "Entertainment",
+  "Health",
+  "Other",
+];
+
 function EditModal({ transaction, onSave, onClose }) {
   const [form, setForm] = React.useState({
     Date: transaction.Date,
@@ -24,9 +34,6 @@ function EditModal({ transaction, onSave, onClose }) {
     Amount: transaction.Amount,
     category: transaction.category || "",
   });
-
-  const [DEFAULTCATEGORIES , setDEFAULTCATEGORIES] = useState([ "Food", "Transport",
-    "Shopping","Income", "Bills", "Entertainment", "Health", "Other"]);
 
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -38,8 +45,8 @@ function EditModal({ transaction, onSave, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="retro-card p-8 max-w-md w-full mx-4 animate-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+      <div className="retro-card responsive-modal-panel p-5 sm:p-8 animate-in zoom-in-95 duration-200">
         <h3 className="text-xl font-black uppercase tracking-widest text-white mb-6">
           Edit Transaction
         </h3>
@@ -81,8 +88,8 @@ function EditModal({ transaction, onSave, onClose }) {
               onChange={handleChange}
               >
               {
-                DEFAULTCATEGORIES.map((options, index)=>(
-                  <option key={index} value={options}>{options}</option>
+                DEFAULT_CATEGORIES.map((options) => (
+                  <option key={options} value={options}>{options}</option>
                 ))
               }
             </select>
@@ -102,10 +109,10 @@ function EditModal({ transaction, onSave, onClose }) {
           </div>
         </div>
 
-        <div className="flex justify-end gap-4 mt-8">
+        <div className="responsive-actions sm:justify-end mt-8">
           <button
             onClick={onClose}
-            className="px-6 py-3 border border-[#1F1F1F] text-gray-400 hover:text-white hover:border-gray-500 font-bold uppercase tracking-wider transition-colors"
+            className="responsive-control px-6 py-3 border border-[#1F1F1F] text-gray-400 hover:text-white hover:border-gray-500 font-bold uppercase tracking-wider transition-colors"
           >
             Cancel
           </button>
@@ -143,28 +150,33 @@ export default function Transaction() {
     switch (preset) {
       case "today":
         return { start: today, end: new Date(today.getTime() + 86400000) };
-      case "yesterday":
+      case "yesterday": {
         const yesterday = new Date(today.getTime() - 86400000);
         return { start: yesterday, end: today };
-      case "this-week":
+      }
+      case "this-week": {
         const weekStart = new Date(today);
         weekStart.setDate(today.getDate() - today.getDay());
         return { start: weekStart, end: new Date() };
-      case "last-week":
+      }
+      case "last-week": {
         const lastWeekEnd = new Date(today);
         lastWeekEnd.setDate(today.getDate() - today.getDay());
         const lastWeekStart = new Date(lastWeekEnd);
         lastWeekStart.setDate(lastWeekEnd.getDate() - 7);
         return { start: lastWeekStart, end: lastWeekEnd };
+      }
       case "this-month":
         return { start: new Date(now.getFullYear(), now.getMonth(), 1), end: new Date() };
-      case "last-month":
+      case "last-month": {
         const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
         const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
         return { start: lastMonth, end: lastMonthEnd };
-      case "last-3-months":
+      }
+      case "last-3-months": {
         const threeMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 3, 1);
         return { start: threeMonthsAgo, end: new Date() };
+      }
       case "this-year":
         return { start: new Date(now.getFullYear(), 0, 1), end: new Date() };
       default:
@@ -292,7 +304,7 @@ export default function Transaction() {
   };
 
   return transactions && transactions.length > 0 ? (
-    <div className="space-y-6 animate-in fade-in duration-500">
+    <div className="responsive-page space-y-6 animate-in fade-in duration-500">
       {/* Edit Modal */}
       {editingIndex !== null && (
         <EditModal
@@ -303,14 +315,14 @@ export default function Transaction() {
       )}
 
       {/* Filter Panel */}
-      <div className="retro-card p-6">
-        <div className="flex items-center justify-between mb-4">
+      <div className="retro-card responsive-card p-4 sm:p-6">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
           <h2 className="text-[#FF6B00] text-lg font-black uppercase tracking-widest">
             Filters & Search
           </h2>
           <button
             onClick={clearFilters}
-            className="text-xs text-gray-400 hover:text-[#FF6B00] uppercase tracking-wider font-bold transition-colors"
+            className="responsive-control self-start px-3 text-xs text-gray-400 hover:text-[#FF6B00] uppercase tracking-wider font-bold transition-colors"
           >
             Clear All
           </button>
@@ -404,7 +416,7 @@ export default function Transaction() {
               <button
                 key={category}
                 onClick={() => toggleCategory(category)}
-                className={`px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-sm border transition-colors ${
+                className={`min-h-11 px-3 py-2 text-xs font-bold uppercase tracking-wider rounded-sm border transition-colors ${
                   selectedCategories.includes(category)
                     ? "bg-[#FF6B00] text-black border-[#FF6B00]"
                     : "bg-[#1F1F1F] text-gray-300 border-[#2a2a2a] hover:border-[#FF6B00]"
@@ -424,11 +436,11 @@ export default function Transaction() {
       </div>
 
       {/* Transactions Table */}
-      <div className="retro-card overflow-x-auto">
+      <div className="retro-card desktop-table-wrapper overflow-hidden">
         <div className="flex justify-end items-center px-4 pt-4">
           <button
             onClick={exportToCSV}
-            className="px-3 py-2 bg-[#FF6B00] text-black text-sm font-bold rounded-md hover:opacity-90 transition"
+            className="responsive-control px-3 py-2 bg-[#FF6B00] text-black text-sm font-bold rounded-md hover:opacity-90 transition"
           >
             Export CSV
           </button>
@@ -494,10 +506,72 @@ export default function Transaction() {
           </tbody>
         </table>
       </div>
+
+      <div className="mobile-card-list">
+        <button
+          onClick={exportToCSV}
+          className="responsive-control w-full rounded-md bg-[#FF6B00] px-3 py-2 text-sm font-bold text-black transition hover:opacity-90"
+        >
+          Export CSV
+        </button>
+
+        {filteredTransactions.map((data, i) => {
+          const amount = Number(data.Amount);
+          const category = data.category || categorize(data.Description);
+
+          return (
+            <article key={`${data.Date}-${data.Description}-${i}`} className="retro-card p-4">
+              <div className="mb-3 flex items-start justify-between gap-3">
+                <div className="min-w-0">
+                  <p className="text-xs font-bold uppercase tracking-wider text-gray-500">
+                    {data.Date}
+                  </p>
+                  <h3 className="mt-1 break-words text-sm font-bold text-white">
+                    {data.Description}
+                  </h3>
+                </div>
+                <p
+                  className={`shrink-0 text-right text-sm font-black ${
+                    amount > 0 ? "text-[#00C49F]" : "text-white"
+                  }`}
+                >
+                  {amount > 0 ? "+" : ""}
+                  {data.Currency?.symbol || currency.symbol}
+                  {Math.abs(amount).toLocaleString()}
+                </p>
+              </div>
+
+              <div className="flex flex-wrap items-center justify-between gap-3">
+                <span className="flex w-fit items-center gap-2 rounded-sm border border-[#2a2a2a] bg-[#1F1F1F] px-3 py-2 text-xs font-bold uppercase tracking-wider text-gray-300">
+                  <span>{categoryIcons[category] || "📌"}</span>
+                  {category}
+                </span>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handleEdit(i)}
+                    title="Edit transaction"
+                    className="min-h-11 min-w-11 rounded-sm border border-[#2a2a2a] bg-[#1F1F1F] p-2 text-gray-400 transition-colors hover:border-[#FF6B00] hover:text-[#FF6B00]"
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    onClick={() => handleDelete(i)}
+                    title="Delete transaction"
+                    className="min-h-11 min-w-11 rounded-sm border border-[#2a2a2a] bg-[#1F1F1F] p-2 text-gray-400 transition-colors hover:border-red-500 hover:text-red-500"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </div>
+            </article>
+          );
+        })}
+      </div>
     </div>
   ) : (
     <div className="flex flex-col items-center justify-center h-full min-h-[60vh]">
-      <div className="retro-card p-12 flex flex-col items-center max-w-md text-center border-[#FF6B00]/30 shadow-[0_0_20px_rgba(255,107,0,0.1)] animate-in fade-in zoom-in-95 duration-500 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_24px_rgba(255,107,0,0.12)]">
+      <div className="retro-card p-6 sm:p-12 flex flex-col items-center max-w-md text-center border-[#FF6B00]/30 shadow-[0_0_20px_rgba(255,107,0,0.1)] animate-in fade-in zoom-in-95 duration-500 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_24px_rgba(255,107,0,0.12)]">
         <div className="w-16 h-16 bg-[#FF6B00]/10 flex items-center justify-center rounded-full mb-6 text-[#FF6B00]">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -518,7 +592,7 @@ export default function Transaction() {
             <line x1="3" y1="18" x2="3.01" y2="18"></line>
           </svg>
         </div>
-        <h2 className="text-2xl font-black tracking-wider text-white mb-2 uppercase">
+        <h2 className="text-xl sm:text-2xl font-black tracking-wider text-white mb-2 uppercase">
           No Transactions
         </h2>
        <p className="text-gray-400 mb-8 leading-relaxed min-h-[96px] flex items-center">

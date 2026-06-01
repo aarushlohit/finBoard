@@ -61,7 +61,7 @@ export default function Header() {
 
   return (
     <header
-      className="h-16 flex items-center px-4 md:px-8 shrink-0 gap-4 w-full z-40"
+      className="min-h-16 flex items-center px-4 md:px-8 shrink-0 gap-3 sm:gap-4 w-full z-40"
       style={{
         background: "rgba(10,10,10,0.8)",
         backdropFilter: "blur(12px)",
@@ -69,7 +69,7 @@ export default function Header() {
       }}
     >
       <label htmlFor="mobile-drawer"
-        className="p-2 cursor-pointer rounded-lg transition-colors lg:hidden"
+        className="p-2 cursor-pointer rounded-lg transition-colors lg:hidden min-h-11 min-w-11 inline-flex items-center justify-center"
         style={{ color: "#FF6B00" }}
       >
         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -79,11 +79,11 @@ export default function Header() {
         </svg>
       </label>
 
-      <div className="flex flex-col">
-        <h1 className="text-base font-bold text-white tracking-wide leading-tight">
+      <div className="flex min-w-0 flex-col">
+        <h1 className="text-sm sm:text-base font-bold text-white tracking-wide leading-tight truncate">
           {getPageTitle()}
         </h1>
-        <p className="text-xs text-gray-500 leading-tight">{getPageSubtitle()}</p>
+        <p className="text-xs text-gray-500 leading-tight truncate">{getPageSubtitle()}</p>
       </div>
 
       {/* ── Profile section ──────────────────────────────────────── */}

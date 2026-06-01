@@ -15,11 +15,11 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="w-64 flex flex-col h-full shrink-0"
+    <div className="w-72 max-w-[85vw] lg:w-64 flex flex-col h-full shrink-0 overflow-y-auto"
       style={{ background: "linear-gradient(180deg, #0D0D0D 0%, #080808 100%)", borderRight: "1px solid #1a1a1a" }}>
       
       {/* Logo */}
-      <div className="flex flex-col items-center justify-center p-8 gap-3"
+      <div className="flex flex-col items-center justify-center p-6 sm:p-8 gap-3"
         style={{ borderBottom: "1px solid #1a1a1a" }}>
         <div className="relative">
           <div className="absolute inset-0 rounded-2xl blur-xl opacity-40"
@@ -58,7 +58,7 @@ export default function Sidebar() {
                 const drawer = document.getElementById('mobile-drawer');
                 if (drawer) drawer.checked = false;
               }}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
+              className={`flex min-h-11 items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
                 isActive
                   ? "text-white"
                   : "text-gray-500 hover:text-gray-200"
@@ -91,7 +91,7 @@ export default function Sidebar() {
           <a href="https://github.com/khanirfan18"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl text-xs font-bold tracking-wider text-gray-500 hover:text-white transition-all duration-200"
+          className="flex min-h-11 items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl text-xs font-bold tracking-wider text-gray-500 hover:text-white transition-all duration-200"
           style={{ border: "1px solid #1a1a1a" }}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -103,7 +103,7 @@ export default function Sidebar() {
           <a href="https://irfandev.me"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl text-xs font-bold tracking-wider text-gray-500 hover:text-white transition-all duration-200"
+          className="flex min-h-11 items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl text-xs font-bold tracking-wider text-gray-500 hover:text-white transition-all duration-200"
           style={{ border: "1px solid #1a1a1a" }}
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

@@ -87,15 +87,15 @@ export default function Budgets() {
   };
 
   const panelCardClass =
-    "retro-card p-6 h-full flex flex-col animate-in fade-in duration-500 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_24px_rgba(255,107,0,0.12)]";
+    "retro-card responsive-card p-4 sm:p-6 h-full flex flex-col animate-in fade-in duration-500 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_24px_rgba(255,107,0,0.12)]";
   const budgetCardClass =
-    "retro-card p-6 h-full min-h-[320px] flex flex-col animate-in fade-in duration-500 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_24px_rgba(255,107,0,0.12)]";
+    "retro-card responsive-card p-4 sm:p-6 h-full min-h-[280px] sm:min-h-[320px] flex flex-col animate-in fade-in duration-500 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_24px_rgba(255,107,0,0.12)]";
 
   return transactions && categories.length > 0 ? (
-    <div className="space-y-6 animate-in fade-in duration-500">
+    <div className="responsive-page space-y-6 animate-in fade-in duration-500">
       {showAlert && exceededCategories.length > 0 && (
         <div className={panelCardClass + " border-[#FF6B6B] bg-[#FF6B6B]/5"}>
-          <div className="flex items-start justify-between mb-4">
+          <div className="flex items-start justify-between gap-3 mb-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-[#FF6B6B]/20 flex items-center justify-center rounded-full">
                 <svg
@@ -149,12 +149,12 @@ export default function Budgets() {
             {exceededCategories.map((item) => (
               <div
                 key={item.category}
-                className="flex items-center justify-between bg-[#111111] p-3 border border-[#1F1F1F]"
+                className="flex flex-col gap-2 bg-[#111111] p-3 border border-[#1F1F1F] sm:flex-row sm:items-center sm:justify-between"
               >
                 <span className="font-bold text-white uppercase tracking-wider">
                   {item.category}
                 </span>
-                <span className="text-[#FF6B6B] font-black">
+                <span className="text-[#FF6B6B] font-black break-words sm:text-right">
                   Over by {currency.symbol}
                   {item.over.toLocaleString()}
                   <span className="text-gray-500 text-sm ml-2">
@@ -171,19 +171,20 @@ export default function Budgets() {
 
       {comparisonData.length > 0 && (
         <div className={panelCardClass}>
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4">
             <h2 className="text-[#FF6B00] text-lg font-black uppercase tracking-widest">
               Budget vs Actual Spending
             </h2>
             <button
               onClick={resetBudgets}
-              className="text-xs text-gray-400 hover:text-[#FF6B6B] uppercase tracking-wider font-bold transition-colors"
+              className="responsive-control self-start px-3 text-xs text-gray-400 hover:text-[#FF6B6B] uppercase tracking-wider font-bold transition-colors"
             >
               Reset All Budgets
             </button>
           </div>
 
-          <ResponsiveContainer width="100%" height={300}>
+          <div className="responsive-chart">
+          <ResponsiveContainer width="100%" height={300} minWidth={0}>
             <BarChart
               data={comparisonData}
               margin={{ top: 20, right: 30, left: 0, bottom: 0 }}
@@ -203,6 +204,7 @@ export default function Budgets() {
               <Bar dataKey="budget" fill="#00C49F" name="Budget" radius={[2, 2, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
+          </div>
         </div>
       )}
 
@@ -216,8 +218,8 @@ export default function Budgets() {
               key={category}
               className={`${budgetCardClass} ${isOverBudget ? "border-[#FF6B6B] bg-[#FF6B6B]/5" : ""}`}
             >
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-xl font-bold tracking-widest uppercase text-[#FF6B00]">
+              <div className="flex items-center justify-between gap-3 mb-4">
+                <h2 className="min-w-0 break-words text-lg sm:text-xl font-bold tracking-widest uppercase text-[#FF6B00]">
                   {category}
                 </h2>
                 {isOverBudget && (
@@ -239,9 +241,9 @@ export default function Budgets() {
                 )}
               </div>
 
-              <div className="flex items-baseline gap-2 mb-6">
+              <div className="flex flex-wrap items-baseline gap-2 mb-6">
                 <span className="text-sm text-gray-500 uppercase tracking-wider">Spent</span>
-                <span className={`text-2xl font-black ${isOverBudget ? "text-[#FF6B6B]" : "text-white"}`}>
+                <span className={`break-words text-xl sm:text-2xl font-black ${isOverBudget ? "text-[#FF6B6B]" : "text-white"}`}>
                   {currency.symbol}
                   {spending[category].toLocaleString()}
                 </span>
@@ -302,7 +304,7 @@ export default function Budgets() {
     </div>
   ) : (
     <div className="flex flex-col items-center justify-center h-full min-h-[60vh]">
-      <div className="retro-card p-12 flex flex-col items-center max-w-md text-center border-[#FF6B00]/30 shadow-[0_0_20px_rgba(255,107,0,0.1)] animate-in fade-in zoom-in-95 duration-500 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_24px_rgba(255,107,0,0.12)]">
+      <div className="retro-card p-6 sm:p-12 flex flex-col items-center max-w-md text-center border-[#FF6B00]/30 shadow-[0_0_20px_rgba(255,107,0,0.1)] animate-in fade-in zoom-in-95 duration-500 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_24px_rgba(255,107,0,0.12)]">
         <div className="w-16 h-16 bg-[#FF6B00]/10 flex items-center justify-center rounded-full mb-6 text-[#FF6B00]">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -318,7 +320,7 @@ export default function Budgets() {
             <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
           </svg>
         </div>
-        <h2 className="text-2xl font-black tracking-wider text-white mb-2 uppercase">
+        <h2 className="text-xl sm:text-2xl font-black tracking-wider text-white mb-2 uppercase">
           No Budgets Yet
         </h2>
         <p className="text-gray-400 mb-8 leading-relaxed min-h-[88px] flex items-center justify-center">

@@ -143,7 +143,7 @@ export default function Dashboard() {
 
 return (
     <>
-      <div className="space-y-8 animate-in fade-in duration-500">
+      <div className="responsive-page space-y-6 md:space-y-8 animate-in fade-in duration-500">
         {loading && (
           <div className="flex justify-center items-center py-10">
             <span className="loading loading-spinner loading-lg text-primary"></span>
@@ -152,14 +152,14 @@ return (
 
         {transactions && transactions.length > 0 ? (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 items-stretch">
               <div className="fin-metric-card h-full animate-in fade-in duration-500">
                 <div className="flex items-center justify-between mb-4">
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-xs font-bold tracking-widest uppercase text-gray-500 mb-1">
                       Income
                     </p>
-                    <p className="text-[#00C49F] text-3xl font-black">
+                    <p className="text-[#00C49F] text-2xl sm:text-3xl font-black break-words">
                       {currency.symbol}
                       {totalIncome.toLocaleString()}
                     </p>
@@ -179,11 +179,11 @@ return (
 
               <div className="fin-metric-card h-full animate-in fade-in duration-500">
                 <div className="flex items-center justify-between mb-4">
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-xs font-bold tracking-widest uppercase text-gray-500 mb-1">
                       Spent
                     </p>
-                    <p className="text-[#FF6B6B] text-3xl font-black">
+                    <p className="text-[#FF6B6B] text-2xl sm:text-3xl font-black break-words">
                       {currency.symbol}
                       {Math.abs(totalExpense).toLocaleString()}
                     </p>
@@ -203,11 +203,11 @@ return (
 
               <div className="fin-metric-card h-full animate-in fade-in duration-500">
                 <div className="flex items-center justify-between mb-4">
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-xs font-bold tracking-widest uppercase text-gray-500 mb-1">
                       Savings
                     </p>
-                    <p className="text-[#0088FE] text-3xl font-black">
+                    <p className="text-[#0088FE] text-2xl sm:text-3xl font-black break-words">
                       {currency.symbol}
                       {savings.toLocaleString()}
                     </p>
@@ -226,17 +226,18 @@ return (
               </div>
             </div>
 
-            <section className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-              <div className="retro-card p-4 flex flex-col items-center justify-center min-h-[400px] h-full animate-in fade-in duration-500">
-                <h3 className="text-fin-orange font-bold tracking-widest text-sm uppercase self-start mb-4 px-4 pt-2">
+            <section className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6 items-stretch">
+              <div className="retro-card responsive-card p-4 sm:p-5 flex flex-col items-center justify-center min-h-[340px] sm:min-h-[400px] h-full animate-in fade-in duration-500">
+                <h3 className="text-fin-orange font-bold tracking-widest text-sm uppercase self-start mb-4 sm:px-4 pt-2">
                   Spending by Category
                 </h3>
-                <ResponsiveContainer width="100%" height={350}>
+                <div className="responsive-chart">
+                <ResponsiveContainer width="100%" height={300} minWidth={0}>
                   <PieChart>
                     <Pie
                       data={chartData}
-                      innerRadius={90}
-                      outerRadius={130}
+                      innerRadius="45%"
+                      outerRadius="70%"
                       dataKey="value"
                       stroke="none"
                     >
@@ -248,13 +249,15 @@ return (
                     <Legend />
                   </PieChart>
                 </ResponsiveContainer>
+                </div>
               </div>
 
-              <div className="retro-card p-4 flex flex-col min-h-[400px] h-full animate-in fade-in duration-500">
-                <h3 className="text-fin-orange font-bold tracking-widest text-sm uppercase self-start mb-4 px-4 pt-2">
+              <div className="retro-card responsive-card p-4 sm:p-5 flex flex-col min-h-[340px] sm:min-h-[400px] h-full animate-in fade-in duration-500">
+                <h3 className="text-fin-orange font-bold tracking-widest text-sm uppercase self-start mb-4 sm:px-4 pt-2">
                   Monthly Overview
                 </h3>
-                <ResponsiveContainer width="100%" height={350}>
+                <div className="responsive-chart">
+                <ResponsiveContainer width="100%" height={300} minWidth={0}>
                   <BarChart data={barData}>
                     <XAxis dataKey="month" />
                     <YAxis />
@@ -264,12 +267,13 @@ return (
                     <Bar dataKey="spent" fill="#FF6B6B" />
                   </BarChart>
                 </ResponsiveContainer>
+                </div>
               </div>
             </section>
           </>
         ) : (
           <div className="flex flex-col items-center justify-center h-full min-h-[78vh] pt-10 animate-in fade-in duration-500">
-            <div className="retro-card p-12 flex flex-col items-center max-w-md text-center border-[#FF6B00]/30 shadow-[0_0_20px_rgba(255,107,0,0.1)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_24px_rgba(255,107,0,0.12)]">
+            <div className="retro-card p-6 sm:p-12 flex flex-col items-center max-w-md text-center border-[#FF6B00]/30 shadow-[0_0_20px_rgba(255,107,0,0.1)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_0_24px_rgba(255,107,0,0.12)]">
               <div className="w-16 h-16 bg-[#FF6B00]/10 flex items-center justify-center rounded-full mb-6 text-[#FF6B00]">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -285,7 +289,7 @@ return (
                   <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
                 </svg>
               </div>
-              <h2 className="text-2xl font-black tracking-wider text-white mb-2 uppercase">
+              <h2 className="text-xl sm:text-2xl font-black tracking-wider text-white mb-2 uppercase">
                 No Data Found
               </h2>
               <p className="text-gray-400 mb-8 leading-relaxed min-h-[88px] flex items-center justify-center">
@@ -305,7 +309,7 @@ return (
           setErrorMsg("");
           setShowForm(!showForm);
         }}
-        className="fixed bottom-8 right-8 z-50 w-14 h-14 rounded-full bg-[#FF6B00] text-white flex items-center justify-center shadow-lg hover:bg-[#e05e00] transition-all duration-200 hover:scale-110"
+        className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 z-50 w-14 h-14 rounded-full bg-[#FF6B00] text-white flex items-center justify-center shadow-lg hover:bg-[#e05e00] transition-all duration-200 hover:scale-110"
       >
         {showForm ? <X className="w-6 h-6" /> : <Plus className="w-6 h-6" />}
       </button>
@@ -318,8 +322,8 @@ return (
 
       {/* Modal Form */}
       {showForm && (
-        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60">
-          <div className="retro-card p-6 w-full max-w-md mx-4 animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-40 flex items-center justify-center bg-black/60 p-4">
+          <div className="retro-card responsive-modal-panel p-5 sm:p-6 animate-in fade-in duration-200">
             <h3 className="text-fin-orange font-bold tracking-widest text-sm uppercase mb-4">
               Quick Add Transaction
             </h3>
@@ -379,7 +383,7 @@ return (
               {errorMsg && (
                 <p className="text-red-400 text-xs">{errorMsg}</p>
               )}
-              <div className="flex gap-3 mt-2">
+              <div className="responsive-actions mt-2">
                 <button type="submit" className="retro-btn flex-1">
                   Add
                 </button>
