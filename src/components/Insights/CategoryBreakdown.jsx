@@ -1,6 +1,9 @@
 import React from "react";
+import { useTheme } from "../../context/ThemeContext";
 
 export default function CategoryBreakdown({ transactions }) {
+  const { theme } = useTheme();
+
   const getCategoryStats = () => {
     const totals = {};
     let totalExpenseSum = 0;
@@ -32,14 +35,23 @@ export default function CategoryBreakdown({ transactions }) {
       }
     });
 
-    const colorMap = {
-      bills: "#ef4444",      // Coral Red
-      food: "#3b82f6",       // Indigo Blue
-      health: "#a855f7",     // Fuchsia Purple
-      shopping: "#ec4899",   // Hot Pink
-      transport: "#10b981",  // Teal Green
-      other: "#f59e0b",      // Amber Orange
-    };
+    const colorMap = theme === "light"
+      ? {
+          bills: "#8B5CF6",
+          food: "#A78BFA",
+          health: "#C4B5FD",
+          shopping: "#DDD6FE",
+          transport: "#EDE9FE",
+          other: "#F5F3FF",
+        }
+      : {
+          bills: "#ef4444",      // Coral Red
+          food: "#3b82f6",       // Indigo Blue
+          health: "#a855f7",     // Fuchsia Purple
+          shopping: "#ec4899",   // Hot Pink
+          transport: "#10b981",  // Teal Green
+          other: "#f59e0b",      // Amber Orange
+        };
 
     const formatLabel = (str) => str.charAt(0).toUpperCase() + str.slice(1);
 
@@ -59,7 +71,7 @@ export default function CategoryBreakdown({ transactions }) {
   const categories = getCategoryStats();
 
   return (
-    <div className="bg-[#121214] border border-zinc-800/80 rounded-xl p-6 h-full">
+    <div className="theme-panel rounded-xl p-6 h-full">
       <div className="mb-6">
         <h3 className="text-base font-bold text-white mb-1">Full Category Breakdown</h3>
         <p className="text-xs text-zinc-500">Ranked contribution distribution analysis</p>

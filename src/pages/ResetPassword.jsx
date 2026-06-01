@@ -79,15 +79,15 @@ export default function ResetPassword() {
           alignItems: 'center',
           justifyContent: 'center',
           height: '100vh',
-          background: '#080808',
+          background: 'var(--color-fin-bg)',
         }}
       >
         <div
           style={{
             width: 40,
             height: 40,
-            border: '3px solid #222',
-            borderTopColor: '#FF6B00',
+            border: '3px solid var(--color-fin-border)',
+            borderTopColor: 'var(--color-fin-accent)',
             borderRadius: '50%',
             animation: 'spin 0.8s linear infinite',
           }}

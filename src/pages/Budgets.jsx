@@ -4,9 +4,11 @@ import { Link } from "react-router-dom";
 import categorize from "../components/utils/categorize";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } from "recharts";
 import { useModal } from "../context/ModalContext";
+import { useTheme } from "../context/ThemeContext";
 
 export default function Budgets() {
   const { showModal } = useModal();
+  const { theme } = useTheme();
   const [budgets, setBudgets] = React.useState(() => {
     const saved = localStorage.getItem("budgets");
     return saved ? JSON.parse(saved) : {};
@@ -81,6 +83,11 @@ export default function Budgets() {
 
   const getProgressColor = (spent, budget) => {
     const percentage = (spent / budget) * 100;
+    if (theme === "light") {
+      if (percentage >= 100) return "#A78BFA";
+      if (percentage >= 80) return "#C4B5FD";
+      return "#8B5CF6";
+    }
     if (percentage >= 100) return "#FF6B6B";
     if (percentage >= 80) return "#FFBB28";
     return "#FF6B00";
@@ -199,8 +206,8 @@ export default function Budgets() {
                 }}
               />
               <Legend wrapperStyle={{ paddingTop: "20px" }} />
-              <Bar dataKey="spent" fill="#FF6B6B" name="Spent" radius={[2, 2, 0, 0]} />
-              <Bar dataKey="budget" fill="#00C49F" name="Budget" radius={[2, 2, 0, 0]} />
+              <Bar dataKey="spent" fill={theme === "light" ? "#8B5CF6" : "#FF6B6B"} name="Spent" radius={[2, 2, 0, 0]} />
+              <Bar dataKey="budget" fill={theme === "light" ? "#A78BFA" : "#00C49F"} name="Budget" radius={[2, 2, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
