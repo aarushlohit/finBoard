@@ -90,17 +90,17 @@ ___
 
 ___
 
+
 <h1 align="left">
-  <a>Let’s Get Started</a>
+  <img src="src/assets/start.gif" width="50" alt="Node.js">
+   Let's Get Started
 </h1>
  
- <span style="font-size:32px; font-weight:bold;">
-  Option 1
-</span><br><br>
+## 🚀 Installation
 
 <h1 align="left">
   <img src="src/assets/nodejsDark.svg" width="100" alt="Node.js">
-  <a href="https://nodejs.org/en" target="_blank">Node.js (Recommended)</a>
+  <a href="https://nodejs.org/en" target="_blank">Node.js</a>
 </h1>
 
 1. Clone repository
@@ -133,88 +133,41 @@ Start the server and open it in your browser to explore FinBoard.
 
 ___
 
- <span style="font-size:32px; font-weight:bold;">
-  Other Option
-</span><br><br>
 
-## 🤝 Contributor Notice
+## 🤝 Contributing
 
-Please review the [CONTRIBUTING.md](./CONTRIBUTING.md) before starting your work.
+Thank you for your interest in contributing to FinBoard! 🚀
 
-This project is actively evolving, and certain parts of the repository may be reserved for upcoming features and future milestones.
+Your contributions help improve the project and are greatly appreciated.
 
-⚠️ Docker support is part of the long-term roadmap and is currently intended for maintainer use. Any Docker-related contributions are out of scope unless explicitly requested in an issue by a maintainer.
+### 📘 Before You Start
 
-All contributors are expected to adhere to the project's [Code of Conduct](./CODE_OF_CONDUCT.md) to ensure a respectful and collaborative environment.
+Please review the following documents before opening an issue or submitting a pull request:
 
-___
+* [Contributing Guide](./CONTRIBUTING.md)
+* [Code of Conduct](./CODE_OF_CONDUCT.md)
 
-<h1 align="center">
-  <img src="src/assets/Contribute.png" width="200" alt="gif">
-  <a">Contribute</a>
-</h1>
+### 📌 Contribution Guidelines
 
-## 🤝 Planning to Contribute?
+* Follow the issue creation process outlined in the contribution guide.
+* Claim tasks before starting work when required.
+* Follow pull request guidelines and project standards.
+* Keep contributions aligned with the project's scope and roadmap.
 
-Your contributions are highly appreciated and help improve FinBoard 🚀
+### ⚠️ Important Note
 
-<a href="./CONTRIBUTING.md" style="text-decoration:none;">
-  <button>📘 Read CONTRIBUTING Guide</button>
-</a>
+Docker support is part of the long-term roadmap and is currently intended for maintainer use. Docker-related contributions are out of scope unless explicitly requested by a maintainer.
 
-<a href="./CODE_OF_CONDUCT.md" style="text-decoration:none;">
-  <button>📜 View Code of Conduct</button>
-</a>
+### 💙 Community Expectations
 
----
-
-### 📌 Before You Start
-
-Please make sure to read the contributing guidelines before opening issues or submitting pull requests.
-
-It includes:
-
-- ✅ Valid issue creation process  
-- ✅ Task claiming workflow  
-- ✅ Pull request guidelines  
-- ✅ Project scope and roadmap expectations  
-
----
-
-💡 Following these guidelines ensures smooth collaboration and faster reviews.
-
----
+* Be respectful and constructive in discussions.
+* Write clear and meaningful issues and pull requests.
+* Collaborate professionally with maintainers and contributors.
+* Help maintain a welcoming and inclusive environment for everyone.
 
 ### 🚀 Happy Building!
 
-___
-
-
-<h1 align="center">
-  <a">📜 Community Guidelines</a>
-</h1>
-
-## 🤝 Code of Conduct
-
-To maintain a welcoming and respectful environment for everyone, all contributors are expected to follow the project's Code of Conduct.
-
-<a href="./CODE_OF_CONDUCT.md" style="text-decoration:none;">
-  <button>📜 View Code of Conduct</button>
-</a>
-
----
-
-### 📌 Expectations
-
-- ✅ Be respectful and constructive in all discussions  
-- ✅ Write clear and meaningful issue reports and pull requests  
-- ✅ Follow project guidelines while contributing  
-- ✅ Help maintain a positive and inclusive community  
-
----
-
-💙 Thank you for being part of FinBoard and contributing to a better open-source experience!
-
+Thank you for helping make FinBoard better!
 ___
 
 ## 🚀 Tech Stack
