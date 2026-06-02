@@ -69,7 +69,6 @@ export function AppContext({ children }) {
       if (Array.isArray(stored) && stored.length > 0) {
         const normalized = normalizeTransactions(stored, { currency });
 
-        // Only write back if normalization changed
         if (JSON.stringify(normalized) !== JSON.stringify(stored)) {
           setTransactions(normalized);
           localStorage.setItem('transactions', JSON.stringify(normalized));
@@ -220,4 +219,3 @@ export function AppContext({ children }) {
     </DataContext.Provider>
   );
 }
-
