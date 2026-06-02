@@ -1,4 +1,5 @@
 import React from 'react'
+import normalizeTransaction, { normalizeTransactions } from '../lib/transactionNormalizer';
 
 export const DataContext = React.createContext();
 
@@ -11,12 +12,22 @@ export const CURRENCIES = [
   { code: 'AED', symbol: 'د.إ', name: 'UAE Dirham' },
 ];
 
+function readLocalStorageJSON(key, fallback) {
+  try {
+    const storedValue = localStorage.getItem(key);
+    if (!storedValue) return fallback;
+    return JSON.parse(storedValue);
+  } catch {
+    return fallback;
+  }
+}
+
 export function AppContext({ children }) {
-  const [transactions, setTransactions] = React.useState(
-    JSON.parse(localStorage.getItem('transactions')) || []
+  const [transactions, setTransactions] = React.useState(() =>
+    readLocalStorageJSON('transactions', [])
   );
-  const [currency, setCurrency] = React.useState(
-    JSON.parse(localStorage.getItem('currency')) || CURRENCIES[0]
+  const [currency, setCurrency] = React.useState(() =>
+    readLocalStorageJSON('currency', CURRENCIES[0])
   );
   const [converting, setConverting] = React.useState(false);
   const [currencySymbols, setCurrencySymbols] = React.useState({});
@@ -41,6 +52,21 @@ export function AppContext({ children }) {
         setCurrencySymbols(symbols);
       })
       .catch(err => console.error(err));
+  }, []);
+
+  React.useEffect(() => {
+    try {
+      const stored = readLocalStorageJSON('transactions', []);
+      if (Array.isArray(stored) && stored.length > 0) {
+        const normalized = normalizeTransactions(stored, { currency });
+        if (JSON.stringify(normalized) !== JSON.stringify(stored)) {
+          setTransactions(normalized);
+          localStorage.setItem('transactions', JSON.stringify(normalized));
+        }
+      }
+    } catch (e) {
+      console.error('Normalization failed', e);
+    }
   }, []);
 
   const updateCurrency = async (selectedCurrency) => {
@@ -75,11 +101,11 @@ export function AppContext({ children }) {
 
       const convertedTransactions = transactions.map((t) => {
         const parsed = Number(t.Amount);
-        return {
-          ...t,
-          Amount: isNaN(parsed) ? t.Amount : (parsed * rate).toFixed(2),
-          Currency: enrichedCurrency,
-        };
+        const amt = isNaN(parsed) ? t.Amount : (parsed * rate).toFixed(2);
+        return normalizeTransaction(
+          { ...t, Amount: amt, Currency: enrichedCurrency },
+          { currency: enrichedCurrency, source: t.source || 'conversion' }
+        );
       });
 
       setTransactions(convertedTransactions);
@@ -100,8 +126,16 @@ export function AppContext({ children }) {
     localStorage.setItem('transactions', JSON.stringify(updated));
   };
 
+  const addTransaction = (newTransaction) => {
+    const normalized = normalizeTransaction(newTransaction, { currency, source: 'manual' });
+    const updated = [...(transactions || []), normalized];
+    setTransactions(updated);
+    localStorage.setItem('transactions', JSON.stringify(updated));
+  };
+
   const updateTransaction = (index, updatedTransaction) => {
-    const updated = transactions.map((t, i) => (i === index ? updatedTransaction : t));
+    const normalized = normalizeTransaction(updatedTransaction, { currency, source: 'edit' });
+    const updated = transactions.map((t, i) => (i === index ? normalized : t));
     setTransactions(updated);
     localStorage.setItem('transactions', JSON.stringify(updated));
   };
@@ -113,20 +147,16 @@ export function AppContext({ children }) {
       currency,
       updateCurrency,
       deleteTransaction,
+      addTransaction,
       updateTransaction,
       converting,
     }}>
       {converting && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: 'rgba(0,0,0,0.7)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          zIndex: 9999,
-        }}>
+        <div className="theme-overlay">
           <div
             role="status"
             aria-live="assertive"
-            style={{ color: '#FF6B00', fontSize: '1.2rem', fontWeight: 'bold' }}
+            className="theme-overlay-card"
           >
             Converting transactions... please wait
           </div>
