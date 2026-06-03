@@ -21,6 +21,7 @@ function readLocalStorageJSON(key, fallback) {
     return fallback;
   }
 }
+
 export function AppContext({ children }) {
   const [transactions, setTransactions] = React.useState(() =>
     readLocalStorageJSON('transactions', [])
@@ -30,8 +31,9 @@ export function AppContext({ children }) {
     readLocalStorageJSON('currency', CURRENCIES[0])
   );
 
-  const [converting, setConverting] = React.useState(false);
+
   const [currencySymbols, setCurrencySymbols] = React.useState({});
+  const [exchangeRates, setExchangeRates] = React.useState(null);
 
   React.useEffect(() => {
     fetch('https://open.er-api.com/v6/latest/USD')
@@ -54,6 +56,7 @@ export function AppContext({ children }) {
         });
 
         setCurrencySymbols(symbols);
+        setExchangeRates(data.rates);
       })
       .catch((err) => console.error(err));
   }, []);
@@ -74,82 +77,21 @@ export function AppContext({ children }) {
     } catch (e) {
       console.error('Normalization failed', e);
     }
-  }, []);
+  }, []); // Note: we only want this to run once, so currency isn't in dep array to avoid loops, but normalization might use current base currency.
 
   const updateCurrency = async (selectedCurrency) => {
     if (selectedCurrency.code === currency.code) return;
 
-    if (!transactions?.length) {
-      setCurrency(selectedCurrency);
-      localStorage.setItem('currency', JSON.stringify(selectedCurrency));
-      return;
-    }
+    const enrichedCurrency = {
+      ...selectedCurrency,
+      symbol:
+        selectedCurrency.symbol ||
+        currencySymbols[selectedCurrency.code] ||
+        selectedCurrency.code,
+    };
 
-    const confirmed = window.confirm(
-      `Convert all transactions from ${currency.code} to ${selectedCurrency.code}?`
-    );
-
-    if (!confirmed) return;
-
-    setConverting(true);
-
-    try {
-      const res = await fetch(
-        `https://open.er-api.com/v6/latest/${currency.code}`
-      );
-
-      const data = await res.json();
-      const rate = data.rates[selectedCurrency.code];
-
-      if (!rate) throw new Error('Rate not found');
-
-      const enrichedCurrency = {
-        ...selectedCurrency,
-        symbol:
-          selectedCurrency.symbol ||
-          currencySymbols[selectedCurrency.code] ||
-          selectedCurrency.code,
-      };
-
-      const convertedTransactions = transactions.map((t) => {
-        const parsed = Number(t.Amount);
-
-        const amt = isNaN(parsed)
-          ? t.Amount
-          : (parsed * rate).toFixed(2);
-
-        return normalizeTransaction(
-          {
-            ...t,
-            Amount: amt,
-            Currency: enrichedCurrency,
-          },
-          {
-            currency: enrichedCurrency,
-            source: t.source || 'conversion',
-          }
-        );
-      });
-
-      setTransactions(convertedTransactions);
-      localStorage.setItem(
-        'transactions',
-        JSON.stringify(convertedTransactions)
-      );
-
-      setCurrency(enrichedCurrency);
-      localStorage.setItem(
-        'currency',
-        JSON.stringify(enrichedCurrency)
-      );
-    } catch (err) {
-      alert(
-        'Failed to fetch exchange rate. Check your internet and try again.'
-      );
-      console.error(err);
-    } finally {
-      setConverting(false);
-    }
+    setCurrency(enrichedCurrency);
+    localStorage.setItem('currency', JSON.stringify(enrichedCurrency));
   };
 
   const deleteTransaction = (index) => {
@@ -172,8 +114,14 @@ export function AppContext({ children }) {
   };
 
   const updateTransaction = (index, updatedTransaction) => {
-    const normalized = normalizeTransaction(updatedTransaction, {
-      currency,
+    // Retain the original currency if possible
+    const originalCurrency = transactions[index]?.Currency || currency;
+    
+    const normalized = normalizeTransaction({
+      ...updatedTransaction,
+      Currency: originalCurrency,
+    }, {
+      currency: originalCurrency,
       source: 'edit',
     });
 
@@ -185,31 +133,46 @@ export function AppContext({ children }) {
     localStorage.setItem('transactions', JSON.stringify(updated));
   };
 
+  const displayTransactions = React.useMemo(() => {
+    if (!transactions) return [];
+    
+    return transactions.map((t) => {
+      let convertedAmt = t.Amount;
+      
+      if (exchangeRates && t.Currency?.code !== currency.code) {
+        const origCode = t.Currency?.code || currency.code;
+        const rateOrigToUSD = 1 / (exchangeRates[origCode] || 1);
+        const rateUSDToTarget = exchangeRates[currency.code] || 1;
+        const conversionRate = rateOrigToUSD * rateUSDToTarget;
+        
+        const parsed = Number(t.Amount);
+        if (!isNaN(parsed)) {
+          convertedAmt = (parsed * conversionRate).toFixed(2);
+        }
+      }
+
+      return {
+        ...t,
+        originalAmount: t.Amount,
+        originalCurrency: t.Currency || currency,
+        Amount: convertedAmt,
+        Currency: currency,
+      };
+    });
+  }, [transactions, currency, exchangeRates]);
+
   return (
     <DataContext.Provider
       value={{
-        transactions,
-        setTransactions,
+        transactions: displayTransactions,
+        setTransactions, // Used primarily internally or for full resets
         currency,
         updateCurrency,
         deleteTransaction,
         addTransaction,
         updateTransaction,
-        converting,
       }}
     >
-      {converting && (
-        <div className="theme-overlay">
-          <div
-            role="status"
-            aria-live="assertive"
-            className="theme-overlay-card"
-          >
-            Converting transactions... please wait
-          </div>
-        </div>
-      )}
-
       {children}
     </DataContext.Provider>
   );

@@ -21,7 +21,7 @@ function EditModal({ transaction, onSave, onClose }) {
   const [form, setForm] = React.useState({
     Date: transaction.Date,
     Description: transaction.Description,
-    Amount: transaction.Amount,
+    Amount: transaction.originalAmount ?? transaction.Amount,
     category: transaction.category || "",
   });
 
@@ -89,7 +89,7 @@ function EditModal({ transaction, onSave, onClose }) {
           </div>
           <div>
             <label className="block text-xs text-gray-400 uppercase tracking-wider font-bold mb-2">
-              Amount
+              Amount {transaction.originalCurrency ? `(${transaction.originalCurrency.symbol || transaction.originalCurrency.code})` : ""}
             </label>
             <input
               type="number"
