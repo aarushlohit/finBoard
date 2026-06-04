@@ -24,23 +24,23 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="theme-sidebar w-64 flex flex-col h-full shrink-0">
+    <div className="theme-sidebar w-64 flex flex-col h-screen shrink-0">
       
       {/* Logo */}
-      <div className="flex flex-col items-center justify-center p-8 gap-3"
+      <div className="flex flex-col items-center justify-center px-4 py-4 md:px-6 md:py-5 gap-2 shrink-0"
         style={{ borderBottom: "1px solid var(--color-fin-border)" }}>
         <div className="relative">
           <div className="absolute inset-0 rounded-2xl blur-xl opacity-40"
             style={{ background: "var(--color-fin-accent-soft)" }} />
           <img
-            className="relative w-20 h-20 object-cover rounded-2xl"
+            className="relative w-12 h-12 md:w-14 md:h-14 object-cover rounded-xl"
             style={{ border: "1px solid var(--color-fin-border-hover)", boxShadow: "0 0 24px var(--color-fin-shadow-accent)" }}
             src={finbGif}
             alt="finboard icon"
           />
         </div>
         <span
-          className="text-2xl text-transparent bg-clip-text"
+          className="text-lg md:text-xl text-transparent bg-clip-text"
           style={{
             backgroundImage: "linear-gradient(135deg, var(--color-fin-accent) 0%, var(--color-fin-accent-strong) 100%)",
             fontFamily: "'Righteous', 'Bungee', cursive",
@@ -49,12 +49,11 @@ export default function Sidebar() {
         >
           FINBOARD
         </span>
-        <span className="fin-badge">Personal Finance</span>
+        <span className="fin-badge ">Personal Finance</span>
       </div>
 
       {/* Nav */}
-      <nav className="flex flex-col flex-1 py-6 px-3 gap-1 overflow-y-auto">
-        <p className="fin-section-title px-3 mb-4">Navigation</p>
+      <nav className="flex flex-col py-3 px-3 gap-1 overflow-y-auto">
         {links.map((link) => {
           const isActive = path === link.to;
           const Icon = link.icon;
@@ -66,7 +65,7 @@ export default function Sidebar() {
                 const drawer = document.getElementById('mobile-drawer');
                 if (drawer) drawer.checked = false;
               }}
-              className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
+              className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${
                 isActive
                   ? "text-[var(--color-fin-text)]"
                   : "text-[var(--color-fin-muted)] hover:text-[var(--color-fin-text)]"
@@ -94,7 +93,7 @@ export default function Sidebar() {
       </nav>
 
       {/* Footer */}
-      <div className="p-4 flex flex-col gap-2" style={{ borderTop: "1px solid var(--color-fin-border)" }}>
+      <div className="p-3 flex flex-col gap-2 shrink-0 mt-auto" style={{ borderTop: "1px solid var(--color-fin-border)" }}>
         
           <a href="https://github.com/khanirfan18"
           target="_blank"

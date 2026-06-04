@@ -5,6 +5,7 @@ import { useModal } from "../context/ModalContext";
 import categorize from "../components/utils/categorize";
 import { parse } from "date-fns";
 import { useState } from "react";
+import { createPortal } from "react-dom";
 
 const categoryIcons = {
   Food: "🍔",
@@ -28,6 +29,14 @@ function EditModal({ transaction, onSave, onClose }) {
   const [DEFAULTCATEGORIES , setDEFAULTCATEGORIES] = useState([ "Food", "Transport",
     "Shopping","Income", "Bills", "Entertainment", "Health", "Other"]);
 
+  React.useEffect(() => {
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+  
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
@@ -37,9 +46,9 @@ function EditModal({ transaction, onSave, onClose }) {
     onSave({ ...transaction, ...form, Amount: Number(form.Amount) });
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="retro-card p-8 max-w-md w-full mx-4 animate-in zoom-in-95 duration-200">
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] grid place-items-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="retro-card p-6 md:p-8 max-w-md w-[calc(100%-2rem)] max-h-[90vh] overflow-y-auto animate-in zoom-in-95 duration-200">
         <h3 className="text-xl font-black uppercase tracking-widest text-white mb-6">
           Edit Transaction
         </h3>
@@ -114,7 +123,8 @@ function EditModal({ transaction, onSave, onClose }) {
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
 
