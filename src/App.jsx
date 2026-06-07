@@ -4,7 +4,7 @@ import Budgets from "./pages/Budgets";
 import Goals from "./pages/Goals";
 import Settings from "./pages/Settings";
 import Transaction from "./pages/Transaction";
-import InsightsDashboard from "./pages/InsightsDashboard"; 
+import InsightsDashboard from "./pages/InsightsDashboard";
 import Layout from "./components/layout/Layout";
 import { AppContext } from "./context/AppContext";
 import { AuthProvider } from "./context/AuthContext";
@@ -17,6 +17,8 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import ResetPassword from "./pages/ResetPassword";
 import { isConfigured, configErrorMessage } from "./lib/supabaseClient";
+import Profile from "./pages/Profile";
+import Preferences from "./pages/Preferences";
 
 function ConfigError() {
   return (
@@ -67,29 +69,31 @@ export default function App() {
                   />
                   <Route path="/reset-password" element={<ResetPassword />} />
 
-                {/* ── Protected routes  */}
-                <Route
-                  path="/"
-                  element={
-                    <ProtectedRoute>
-                      <Layout />
-                    </ProtectedRoute>
-                  }
-                >
-                  <Route index element={<Dashboard />} />
-                  <Route path="dashboard" element={<Dashboard />} />
-                  <Route path="budgets" element={<Budgets />} />
-                  <Route path="settings" element={<Settings />} />
-                  <Route path="transaction" element={<Transaction />} />
-                  <Route path="insights" element={<InsightsDashboard />} />
-                  <Route path="goals" element={<Goals />} />
-                </Route>
-              </Routes>
-            </BrowserRouter>
-            <Modal />
-          </ModalProvider>
-        </AppContext>
-      </AuthProvider>
+                  {/* ── Protected routes  */}
+                  <Route
+                    path="/"
+                    element={
+                      <ProtectedRoute>
+                        <Layout />
+                      </ProtectedRoute>
+                    }
+                  >
+                    <Route index element={<Dashboard />} />
+                    <Route path="dashboard" element={<Dashboard />} />
+                    <Route path="budgets" element={<Budgets />} />
+                    <Route path="settings" element={<Settings />} />
+                    <Route path="transaction" element={<Transaction />} />
+                    <Route path="insights" element={<InsightsDashboard />} />
+                    <Route path="goals" element={<Goals />} />
+                    <Route path="profile" element={<Profile />} />
+                    <Route path="preferences" element={<Preferences />} />
+                  </Route>
+                </Routes>
+              </BrowserRouter>
+              <Modal />
+            </ModalProvider>
+          </AppContext>
+        </AuthProvider>
       </ThemeProvider>
     </>
   );
