@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { useTheme } from "../../context/ThemeContext";
 import { LogOut, ChevronDown, MoonStar, SunMedium } from "lucide-react";
 import { useState, useRef, useEffect } from "react";

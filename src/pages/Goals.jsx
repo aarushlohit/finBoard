@@ -1,8 +1,8 @@
 import React from "react";
-import { DataContext } from "../context/AppContext";
+import { DataContext } from "../context/DataContext";
 import { useModal } from "../context/ModalContext";
 import { supabase } from "../lib/supabaseClient";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 export default function Goals() {
   const { transactions, currency } = React.useContext(DataContext);

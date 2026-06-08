@@ -8,7 +8,7 @@ import InsightsDashboard from "./pages/InsightsDashboard";
 import Layout from "./components/layout/Layout";
 import { AppContext } from "./context/AppContext";
 import { AuthProvider } from "./context/AuthContext";
-import { ModalProvider } from "./context/ModalContext";
+import { ModalProvider } from "./context/ModalProvider";
 import { ThemeProvider } from "./context/ThemeContext";
 import Modal from "./components/Modal";
 import ProtectedRoute from "./components/ProtectedRoute";

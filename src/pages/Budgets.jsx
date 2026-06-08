@@ -1,4 +1,4 @@
-import { DataContext } from "../context/AppContext";
+import { DataContext } from "../context/DataContext";
 import React from "react";
 import { Link } from "react-router-dom";
 import categorize from "../components/utils/categorize";
@@ -6,7 +6,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } fro
 import { useModal } from "../context/ModalContext";
 import { useTheme } from "../context/ThemeContext";
 import { supabase } from "../lib/supabaseClient";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 export default function Budgets() {
   const { showModal } = useModal();

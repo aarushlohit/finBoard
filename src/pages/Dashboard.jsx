@@ -1,4 +1,4 @@
-import { DataContext } from "../context/AppContext";
+import { DataContext } from "../context/DataContext";
 import { Link } from "react-router-dom";
 import categorize from "../components/utils/categorize";
 import {

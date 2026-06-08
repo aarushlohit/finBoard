@@ -1,17 +1,9 @@
 import React from 'react';
 import normalizeTransaction, { normalizeTransactions } from '../lib/transactionNormalizer';
 import { supabase } from '../lib/supabaseClient';
-import { useAuth } from './AuthContext';
-
-export const DataContext = React.createContext();
-export const CURRENCIES = [
-  { code: 'INR', symbol: '₹', name: 'Indian Rupee' },
-  { code: 'USD', symbol: '$', name: 'US Dollar' },
-  { code: 'EUR', symbol: '€', name: 'Euro' },
-  { code: 'GBP', symbol: '£', name: 'British Pound' },
-  { code: 'JPY', symbol: '¥', name: 'Japanese Yen' },
-  { code: 'AED', symbol: 'د.إ', name: 'UAE Dirham' },
-];
+import { useAuth } from './useAuth';
+import { DataContext } from './DataContext';
+import {CURRENCIES} from '../lib/Currencies'
 
 export function AppContext({ children }) {
   const { user } = useAuth();
