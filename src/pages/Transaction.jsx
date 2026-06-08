@@ -140,6 +140,8 @@ export default function Transaction() {
   const [minAmount, setMinAmount] = React.useState("");
   const [maxAmount, setMaxAmount] = React.useState("");
   const [editingIndex, setEditingIndex] = React.useState(null);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const ITEMS_PER_PAGE = 50;
 
   const allCategories = React.useMemo(() => {
     const cats = new Set();
@@ -250,6 +252,16 @@ export default function Transaction() {
       prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
     );
   };
+
+  React.useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, datePreset, selectedCategories, sortBy, minAmount, maxAmount]);
+
+  const totalPages = Math.ceil(filteredTransactions.length / ITEMS_PER_PAGE);
+  const paginatedTransactions = filteredTransactions.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
   const clearFilters = () => {
     setSearchTerm("");
@@ -454,9 +466,11 @@ export default function Transaction() {
             </tr>
           </thead>
           <tbody>
-            {filteredTransactions.map((data, i) => (
+            {paginatedTransactions.map((data, i) => {
+              const globalIdx = (currentPage - 1) * ITEMS_PER_PAGE + i;
+              return (
               <tr
-                key={i}
+                key={globalIdx}
                 className="border-b border-[#1F1F1F]/50 hover:bg-[#1a1a1a] transition-colors"
               >
                 <td className="py-4 px-6 text-gray-400 whitespace-nowrap">{data.Date}</td>
@@ -484,14 +498,14 @@ export default function Transaction() {
                 <td className="py-4 px-6">
                   <div className="flex items-center justify-center gap-2">
                     <button
-                      onClick={() => handleEdit(i)}
+                      onClick={() => handleEdit(globalIdx)}
                       title="Edit transaction"
                       className="p-2 rounded-sm border border-[#2a2a2a] bg-[#1F1F1F] text-gray-400 hover:text-[#FF6B00] hover:border-[#FF6B00] transition-colors"
                     >
                       ✏️
                     </button>
                     <button
-                      onClick={() => handleDelete(i)}
+                      onClick={() => handleDelete(globalIdx)}
                       title="Delete transaction"
                       className="p-2 rounded-sm border border-[#2a2a2a] bg-[#1F1F1F] text-gray-400 hover:text-red-500 hover:border-red-500 transition-colors"
                     >
@@ -500,10 +514,33 @@ export default function Transaction() {
                   </div>
                 </td>
               </tr>
-            ))}
+            )})}
           </tbody>
         </table>
       </div>
+
+      {/* Pagination Controls */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between retro-card p-4">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="px-4 py-2 bg-[#1F1F1F] text-gray-300 font-bold uppercase tracking-wider rounded-sm border border-[#2a2a2a] hover:border-[#FF6B00] hover:text-[#FF6B00] transition-colors disabled:opacity-50 disabled:pointer-events-none"
+          >
+            Previous
+          </button>
+          <div className="text-sm font-bold text-gray-400 uppercase tracking-widest">
+            Page <span className="text-[#FF6B00]">{currentPage}</span> of {totalPages}
+          </div>
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="px-4 py-2 bg-[#1F1F1F] text-gray-300 font-bold uppercase tracking-wider rounded-sm border border-[#2a2a2a] hover:border-[#FF6B00] hover:text-[#FF6B00] transition-colors disabled:opacity-50 disabled:pointer-events-none"
+          >
+            Next
+          </button>
+        </div>
+      )}
     </div>
   ) : (
     <div className="flex flex-col items-center justify-center h-full min-h-[60vh]">
