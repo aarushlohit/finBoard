@@ -1,10 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { DataContext } from "../context/AppContext";
+import { DataContext } from "../context/DataContext";
 import { useModal } from "../context/ModalContext";
 import categorize from "../components/utils/categorize";
 import { parse } from "date-fns";
-import { useState } from "react";
 import { createPortal } from "react-dom";
 
 const categoryIcons = {
@@ -26,8 +25,8 @@ function EditModal({ transaction, onSave, onClose }) {
     category: transaction.category || "",
   });
 
-  const [DEFAULTCATEGORIES , setDEFAULTCATEGORIES] = useState([ "Food", "Transport",
-    "Shopping","Income", "Bills", "Entertainment", "Health", "Other"]);
+  const DEFAULTCATEGORIES = [ "Food", "Transport",
+    "Shopping","Income", "Bills", "Entertainment", "Health", "Other"];
 
   React.useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -151,30 +150,41 @@ export default function Transaction() {
     const now = new Date();
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     switch (preset) {
+      // Don't remove block { } -> This makes scopes for variables to check npm run Lint 
       case "today":
         return { start: today, end: new Date(today.getTime() + 86400000) };
       case "yesterday":
+      {
         const yesterday = new Date(today.getTime() - 86400000);
         return { start: yesterday, end: today };
+      }
       case "this-week":
+      {
         const weekStart = new Date(today);
         weekStart.setDate(today.getDate() - today.getDay());
         return { start: weekStart, end: new Date() };
+      }
       case "last-week":
+      {
         const lastWeekEnd = new Date(today);
         lastWeekEnd.setDate(today.getDate() - today.getDay());
         const lastWeekStart = new Date(lastWeekEnd);
         lastWeekStart.setDate(lastWeekEnd.getDate() - 7);
         return { start: lastWeekStart, end: lastWeekEnd };
+      }
       case "this-month":
         return { start: new Date(now.getFullYear(), now.getMonth(), 1), end: new Date() };
       case "last-month":
+      {
         const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
         const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
         return { start: lastMonth, end: lastMonthEnd };
+      }
       case "last-3-months":
+      {
         const threeMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 3, 1);
         return { start: threeMonthsAgo, end: new Date() };
+      }
       case "this-year":
         return { start: new Date(now.getFullYear(), 0, 1), end: new Date() };
       default:
@@ -473,7 +483,7 @@ export default function Transaction() {
                 >
                   {Number(data.Amount) > 0 ? "+" : ""}
                   {data.Currency?.symbol || currency.symbol}
-                  {Math.abs(Number(data.Amount)).toLocaleString()}
+                  {Math.abs(Number(data.Amount)).toFixed(2)}
                 </td>
                 <td className="py-4 px-6">
                   <span className="bg-[#1F1F1F] text-gray-300 px-3 py-1 text-xs font-bold uppercase tracking-wider rounded-sm border border-[#2a2a2a] flex items-center gap-2 w-fit">

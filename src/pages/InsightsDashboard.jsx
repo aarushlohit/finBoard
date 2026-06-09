@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { DataContext } from "../context/AppContext";
+import { DataContext } from "../context/DataContext";
 import { Link } from "react-router-dom";
 import InsightCards from "../components/Insights/InsightCards";
 import CategoryBreakdown from "../components/Insights/CategoryBreakdown";

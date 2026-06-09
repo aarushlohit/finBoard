@@ -14,6 +14,10 @@
    <img width="1536" height="899" alt="FinBoard Dashboard Preview" src="https://github.com/user-attachments/assets/71259266-b4ac-4777-a412-f9823a7a8977" />
 </div>
 
+<p align="center">
+  <img width="1740" height="1011" alt="FinBoard Preview" src="https://github.com/user-attachments/assets/52fd99d8-7df9-41b0-bc31-65bb7fe09edd" />
+</p>
+
 ---
 
 ## 📌 Table of Contents
@@ -83,95 +87,61 @@ Your financial data remains under your control.
 
 ### Prerequisites
 
-* Node.js v18 or higher
-* npm (included with Node.js)
+Choose your preferred setup:
 
-### Installation
+- **Node.js** → https://nodejs.org/
+- **Docker + Docker Compose** → https://docs.docker.com/get-docker/
+
+---
+
+### Option 1 — Node.js (Classic)
 
 ```bash
 # Clone the repository
 git clone https://github.com/khanirfan18/finBoard.git
-
-# Navigate into the project
 cd finBoard
 
-# Install dependencies
+2. Install packages
+
+```bash
 npm install
 
-# Start the development server
+3. Start development server
+
+```bash
 npm run dev
 ```
 
-Open:
-
-```text
-http://localhost:5173
-```
----
-## 🔧 Local Development Setup
-
-FinBoard uses Supabase for authentication and data storage.
-
-Before running the application locally, configure your Supabase project and environment variables by following the setup guide:
-
-* [SUPABASE_SETUP.md](./SUPABASE_SETUP.md)
-
-If you encounter:
-
-```text
-Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY
-```
-
-make sure you have completed the Supabase setup steps and created the required `.env` file.
+Open http://localhost:5173
 
 ---
-## 📁 Project Structure
 
-A modular React-based structure with clear separation of UI components, pages, state management, and utilities.
+### Option 2 — Docker (Recommended for Contributors)
 
+1. Clone repository
+
+```bash
+git clone https://github.com/khanirfan18/finBoard.git
+cd finBoard
 ```
-FINBOARD/
-├── src/
-│   ├── assets/              # Static images and icons
-│   ├── components/          # Reusable UI components
-│   ├── context/             # Global state management (React Context)
-│   ├── data/                # Static/mock data
-│   ├── hooks/              # Custom React hooks
-│   ├── lib/                # Utilities, API config, helpers
-│   ├── pages/              # Application pages/routes
-│   │   ├── Budgets.jsx
-│   │   ├── Dashboard.jsx
-│   │   ├── Goals.jsx
-│   │   ├── InsightsDashboard.jsx
-│   │   ├── Settings.jsx
-│   │   └── Transaction.jsx
-│   ├── App.jsx             # Main app routing
-│   └── main.jsx            # Entry point
-│
-├── test/                   # Unit / utility tests
-│
-├── package.json            # Project dependencies & scripts
-├── vite.config.js          # Vite configuration
-├── index.html              # App root HTML
-├── netlify.toml            # Deployment config
-├── docker-compose.yml      # Docker support
-├── Dockerfile.*            # Docker build configs
-├── .env.example            # Environment variables template
-├── README.md
-└── LICENSE
+
+2. Start development server
+
+```bash
+docker compose up dev --build
 ```
----
 
-## 🛠 Tech Stack
+Open http://localhost:5173
 
-| Layer              | Technologies              |
-| ------------------ | ------------------------- |
-| Frontend           | React, React Router       |
-| Build Tool         | Vite                      |
-| Styling            | Tailwind CSS, DaisyUI     |
-| Charts             | Recharts                  |
-| Icons              | Lucide Icons, Custom SVGs |
-| Backend / Database | Supabase                  |
+> Code changes reflect instantly via Vite HMR — no restart needed after the first run.
+
+#### Production build
+
+```bash
+docker compose up prod --build
+```
+
+Open http://localhost:80
 
 ---
 
@@ -186,16 +156,4 @@ Before opening an issue or submitting a pull request, please review:
 
 ### Guidelines
 
-* Follow the issue creation process outlined in the contribution guide
-* Claim tasks before beginning work
-* Align contributions with the project's scope and roadmap
-* Write clear and meaningful commit messages and pull request descriptions
-* Maintain respectful and constructive communication
-
-> Docker support is part of the long-term roadmap and is currently reserved for maintainer use. Docker-related contributions are out of scope unless explicitly requested by a maintainer.
-
----
-
-## 📄 License
-
-This project is licensed under the terms specified in the [LICENSE](./LICENSE) file.
+Happy building 🚀

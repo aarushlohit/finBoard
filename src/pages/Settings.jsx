@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import Papa from "papaparse";
-import { DataContext, CURRENCIES } from "../context/AppContext";
+import { DataContext } from "../context/DataContext";
+import {CURRENCIES} from "../lib/Currencies"
 import { demoData } from "../data/demoData";
 import { normalizeTransactions } from "../lib/transactionNormalizer";
 import { format } from "date-fns";

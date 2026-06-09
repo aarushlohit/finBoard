@@ -1,4 +1,4 @@
-import { DataContext } from "../context/AppContext";
+import { DataContext } from "../context/DataContext";
 import { Link } from "react-router-dom";
 import categorize from "../components/utils/categorize";
 import {
@@ -176,7 +176,7 @@ return (
                     </p>
                     <p className="text-[#00C49F] text-3xl font-black">
                       {currency.symbol}
-                      {totalIncome.toLocaleString()}
+                      {totalIncome.toFixed(2)}
                     </p>
                   </div>
                   <div
@@ -200,7 +200,7 @@ return (
                     </p>
                     <p className="text-[#FF6B6B] text-3xl font-black">
                       {currency.symbol}
-                      {Math.abs(totalExpense).toLocaleString()}
+                      {Math.abs(totalExpense).toFixed(2)}
                     </p>
                   </div>
                   <div
@@ -224,7 +224,7 @@ return (
                     </p>
                     <p className="text-[#0088FE] text-3xl font-black">
                       {currency.symbol}
-                      {savings.toLocaleString()}
+                      {savings.toFixed(2)}
                     </p>
                   </div>
                   <div
