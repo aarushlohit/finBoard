@@ -116,7 +116,7 @@ export default function InsightCards({ transactions }) {
     {
       title: "TOP SPENDING CATEGORY",
       value: metrics.topCategory,
-      subtitle: `₹${metrics.topCatAmt.toLocaleString()} spent — your biggest expense bucket.`,
+      subtitle: `₹${metrics.topCatAmt.toFixed(2)} spent — your biggest expense bucket.`,
       icon: <ShoppingBag className="w-5 h-5" style={{ color: theme === 'light' ? '#FF6B00' : '#60A5FA' }} />,
     },
     {
@@ -144,8 +144,8 @@ export default function InsightCards({ transactions }) {
     },
     {
       title: "NET SAVINGS THIS MONTH",
-      value: `₹${metrics.netSavings.toLocaleString()}`,
-      subtitle: `Income ₹${metrics.totalIncome.toLocaleString()} minus expenses ₹${metrics.totalExpenses.toLocaleString()}`,
+      value: `₹${metrics.netSavings.toFixed(2)}`,
+      subtitle: `Income ₹${metrics.totalIncome.toFixed(2)} minus expenses ₹${metrics.totalExpenses.toFixed(2)}`,
       icon: <Target className="w-5 h-5" style={{ color: theme === 'light' ? '#FF6B00' : '#E879F9' }} />,
     },
     {
@@ -156,7 +156,7 @@ export default function InsightCards({ transactions }) {
     },
     {
       title: "AVG MONTHLY INCOME",
-      value: `₹${metrics.avgMonthlyIncome.toLocaleString()}`,
+      value: `₹${metrics.avgMonthlyIncome.toFixed(2)}`,
       subtitle: "Average income across all recorded months in your history.",
       icon: <DollarSign className="w-5 h-5" style={{ color: theme === 'light' ? '#FF6B00' : '#C084FC' }} />,
     }

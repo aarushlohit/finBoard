@@ -1,4 +1,4 @@
-import { DataContext } from "../context/AppContext";
+import { DataContext } from "../context/DataContext";
 import React from "react";
 import { Link } from "react-router-dom";
 import categorize from "../components/utils/categorize";
@@ -6,7 +6,7 @@ import { BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer } fro
 import { useModal } from "../context/ModalContext";
 import { useTheme } from "../context/ThemeContext";
 import { supabase } from "../lib/supabaseClient";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 export default function Budgets() {
   const { showModal } = useModal();
@@ -205,11 +205,11 @@ export default function Budgets() {
                 </span>
                 <span className="text-[#FF6B6B] font-black">
                   Over by {currency.symbol}
-                  {item.over.toLocaleString()}
+                  {item.over.toFixed(2)}
                   <span className="text-gray-500 text-sm ml-2">
                     ({currency.symbol}
-                    {item.spent.toLocaleString()} / {currency.symbol}
-                    {item.limit.toLocaleString()})
+                    {item.spent.toFixed(2)} / {currency.symbol}
+                    {item.limit.toFixed(2)})
                   </span>
                 </span>
               </div>
@@ -292,7 +292,7 @@ export default function Budgets() {
                 <span className="text-sm text-gray-500 uppercase tracking-wider">Spent</span>
                 <span className={`text-2xl font-black ${isOverBudget ? "text-[#FF6B6B]" : "text-white"}`}>
                   {currency.symbol}
-                  {spending[category].toLocaleString()}
+                  {spending[category].toFixed(2)}
                 </span>
               </div>
 
@@ -309,11 +309,11 @@ export default function Budgets() {
                     <div className="flex justify-between text-xs font-bold uppercase tracking-wider text-gray-400 mb-2">
                       <span>
                         {currency.symbol}
-                        {spending[category].toLocaleString()}
+                        {spending[category].toFixed(2)}
                       </span>
                       <span>
                         Limit: {currency.symbol}
-                        {budgets[category].toLocaleString()}
+                        {budgets[category].toFixed(2)}
                       </span>
                     </div>
                     <progress
@@ -328,7 +328,7 @@ export default function Budgets() {
                       {percentage >= 100 ? (
                         <span className="text-[#FF6B6B] font-bold">
                           {percentage.toFixed(0)}% - Over budget by {currency.symbol}
-                          {(spending[category] - budgets[category]).toLocaleString()}
+                          {(spending[category] - budgets[category]).toFixed(2)}
                         </span>
                       ) : percentage >= 80 ? (
                         <span className="text-[#FFBB28] font-bold">
@@ -337,7 +337,7 @@ export default function Budgets() {
                       ) : (
                         <span className="text-[#00C49F]">
                           {percentage.toFixed(0)}% - {currency.symbol}
-                          {(budgets[category] - spending[category]).toLocaleString()} remaining
+                          {(budgets[category] - spending[category]).toFixed(2)} remaining
                         </span>
                       )}
                     </div>

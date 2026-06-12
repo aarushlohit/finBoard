@@ -1,8 +1,8 @@
 import React from "react";
-import { DataContext } from "../context/AppContext";
+import { DataContext } from "../context/DataContext";
 import { useModal } from "../context/ModalContext";
 import { supabase } from "../lib/supabaseClient";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 export default function Goals() {
   const { transactions, currency } = React.useContext(DataContext);
@@ -243,7 +243,7 @@ export default function Goals() {
             Unallocated (Available)
           </p>
           <p className="text-3xl font-black text-[#00C49F] mt-1">
-            {currency.symbol}{unallocatedSavings.toFixed(2)}
+            {currency.symbol}{totalSavings.toFixed(2)}
           </p>
         </div>
         <div className="md:text-right">
@@ -302,7 +302,7 @@ export default function Goals() {
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs text-gray-500">
                     <span>{progress.toFixed(1)}% saved</span>
-                    <span>{currency.symbol}{Math.min(saved, goal.target).toFixed(2)} / {currency.symbol}{goal.target.toFixed(2)}</span>
+                    <span>{currency.symbol}{Math.min(totalSavings, goal.target).toFixed(2)} / {currency.symbol}{goal.target.toFixed(2)}</span>
                   </div>
                   <div className="w-full h-3 rounded-full bg-[#222]">
                     <div
@@ -328,35 +328,11 @@ export default function Goals() {
                       <button onClick={() => handleAllocate(goal.id, true)} className="bg-[#FF6B6B] text-black px-3 py-2 rounded-lg text-xs font-bold uppercase">Withdraw</button>
                       <button onClick={() => setAllocationGoalId(null)} className="text-gray-500 px-2 text-xs uppercase font-bold">Cancel</button>
                     </div>
-                  ) : (
-                    <div className="flex justify-between items-end">
-                      <div className="flex gap-3">
-                        <div className="rounded-xl bg-[#111] p-3">
-                          <p className="text-xs text-gray-500 uppercase tracking-wider">Months Left</p>
-                          <p className="text-white font-black text-lg">{monthsLeft}</p>
-                        </div>
-                        <div className="rounded-xl bg-[#111] p-3">
-                          <p className="text-xs text-gray-500 uppercase tracking-wider">Need/Month</p>
-                          <p className="text-[#FF6B00] font-black text-lg">
-                            {currency.symbol}{monthlyNeeded.toFixed(0)}
-                          </p>
-                        </div>
-                      </div>
-                      
-                      {!isAchieved && (
-                        <button 
-                          onClick={() => { setAllocationGoalId(goal.id); setAllocationAmount(""); }}
-                          className="rounded-lg border border-[#333] hover:border-[#FF6B00] hover:text-[#FF6B00] text-gray-400 px-4 py-2 text-xs font-bold uppercase transition-colors"
-                        >
-                          Manage Funds
-                        </button>
-                      )}
-                      
-                      {isAchieved && (
-                        <p className="text-[#00C49F] text-xs font-bold uppercase tracking-wider">
-                          🎉 Goal Achieved!
-                        </p>
-                      )}
+                    <div className="rounded-xl bg-[#111] p-3">
+                      <p className="text-xs text-gray-500 uppercase tracking-wider">Need/Month</p>
+                      <p className="text-[#FF6B00] font-black text-lg">
+                        {currency.symbol}{monthlyNeeded.toFixed(0)}
+                      </p>
                     </div>
                   )}
                 </div>
