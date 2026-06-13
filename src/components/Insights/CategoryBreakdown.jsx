@@ -96,7 +96,7 @@ export default function CategoryBreakdown({ transactions }) {
                   <span className="text-zinc-300 font-medium">{item.displayLabel}</span>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <span className="text-white font-semibold">₹{item.amount.toLocaleString()}</span>
+                  <span className="text-white font-semibold">₹{item.amount.toFixed(2)}</span>
                   <span className="text-zinc-500 text-[10px] font-mono">{item.percentage}%</span>
                 </div>
               </div>

@@ -1,8 +1,8 @@
 import React from "react";
-import { DataContext } from "../context/AppContext";
+import { DataContext } from "../context/DataContext";
 import { useModal } from "../context/ModalContext";
 import { supabase } from "../lib/supabaseClient";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 export default function Goals() {
   const { transactions, currency } = React.useContext(DataContext);
@@ -243,7 +243,7 @@ export default function Goals() {
             Unallocated (Available)
           </p>
           <p className="text-3xl font-black text-[#00C49F] mt-1">
-            {currency.symbol}{unallocatedSavings.toFixed(2)}
+            {currency.symbol}{totalSavings.toFixed(2)}
           </p>
         </div>
         <div className="md:text-right">
@@ -302,7 +302,7 @@ export default function Goals() {
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs text-gray-500">
                     <span>{progress.toFixed(1)}% saved</span>
-                    <span>{currency.symbol}{Math.min(saved, goal.target).toFixed(2)} / {currency.symbol}{goal.target.toFixed(2)}</span>
+                    <span>{currency.symbol}{Math.min(totalSavings, goal.target).toFixed(2)} / {currency.symbol}{goal.target.toFixed(2)}</span>
                   </div>
                   <div className="w-full h-3 rounded-full bg-[#222]">
                     <div
