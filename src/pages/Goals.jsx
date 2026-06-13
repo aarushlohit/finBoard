@@ -315,7 +315,7 @@ export default function Goals() {
 
                 {/* INSIGHTS & ALLOCATION */}
                 <div className="pt-2">
-                  {allocationGoalId === goal.id ? (
+                  {allocationGoalId === goal.id && (
                     <div className="flex gap-2 items-center">
                       <input 
                         type="number" 
@@ -328,7 +328,8 @@ export default function Goals() {
                       <button onClick={() => handleAllocate(goal.id, true)} className="bg-[#FF6B6B] text-black px-3 py-2 rounded-lg text-xs font-bold uppercase">Withdraw</button>
                       <button onClick={() => setAllocationGoalId(null)} className="text-gray-500 px-2 text-xs uppercase font-bold">Cancel</button>
                     </div>
-                  ) : (
+                  )}
+                  {allocationGoalId !== goal.id && (
                     <div className="flex justify-between items-end">
                       <div className="flex gap-3">
                         <div className="rounded-xl bg-[#111] p-3">
