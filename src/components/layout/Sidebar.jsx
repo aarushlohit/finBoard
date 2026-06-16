@@ -8,8 +8,6 @@ import {
   BarChart2,
   Settings,
   Target,
-  UserCircle,
-  SlidersHorizontal,
 } from "lucide-react";
 
 export default function Sidebar() {
@@ -23,8 +21,6 @@ export default function Sidebar() {
     { name: "Transactions", to: "/transaction", icon: ArrowLeftRight },
     { name: "Insights", to: "/insights", icon: BarChart2 },
     { name: "Settings", to: "/settings", icon: Settings },
-    { name: "Profile", to: "/profile", icon: UserCircle },
-    { name: "Preferences", to: "/preferences", icon: SlidersHorizontal },
   ];
 
   return (
