@@ -86,7 +86,7 @@ export default function Header() {
       </div>
 
       {/* ── Profile section ──────────────────────────────────────── */}
-      <div className="flex items-center gap-3 relative" ref={dropdownRef}>
+      <div className="flex items-center gap-3 relative ml-auto" ref={dropdownRef}>
         <button
           onClick={() => setProfileOpen(!profileOpen)}
           className="profile-trigger"
