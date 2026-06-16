@@ -7,7 +7,7 @@ import { normalizeTransactions } from "../lib/transactionNormalizer";
 import { format } from "date-fns";
 import { useModal } from "../context/ModalContext";
 import { supabase } from "../lib/supabaseClient";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 import { Database, Upload, PenLine, Coins, AlertTriangle, Trash2, CheckCircle2 } from "lucide-react";
 
 // =========================
