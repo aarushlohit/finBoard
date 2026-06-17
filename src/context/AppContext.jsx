@@ -83,7 +83,7 @@ export function AppContext({ children }) {
             Date: t.date,
             Amount: t.amount,
             Description: t.description,
-            Category: t.category,
+            category: t.category,
             Currency: t.currency
           }));
           
