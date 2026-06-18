@@ -108,7 +108,7 @@ export default function Settings() {
           setLoading(false);
           showModal({
             type: "alert",
-              "Invalid CSV format. Required: Date, Description, Amount, category.",
+            message: "Invalid CSV format. Required: Date, Description, Amount, category.",
           });
           return;
         }

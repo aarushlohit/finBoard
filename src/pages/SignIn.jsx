@@ -49,7 +49,7 @@ export default function SignIn() {
         }
       });
       if (error) throw error;
-    } catch (error) {
+    } catch {
       setAuthError(`Failed to sign in with ${provider}. Please try again.`);
       setSocialLoading(null);
     }

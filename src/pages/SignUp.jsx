@@ -75,7 +75,7 @@ export default function SignUp() {
         }
       });
       if (error) throw error;
-    } catch (error) {
+    } catch {
       setAuthError(`Failed to sign up with ${provider}. Please try again.`);
       setSocialLoading(null);
     }

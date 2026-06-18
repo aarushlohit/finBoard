@@ -26,7 +26,7 @@ function EditModal({ transaction, onSave, onClose }) {
     category: transaction.category || "",
   });
 
-  const [DEFAULTCATEGORIES , setDEFAULTCATEGORIES] = useState([ "Food", "Transport",
+  const [DEFAULTCATEGORIES] = useState([ "Food", "Transport",
     "Shopping","Income", "Bills", "Entertainment", "Health", "Other"]);
 
   React.useEffect(() => {
@@ -153,28 +153,33 @@ export default function Transaction() {
     switch (preset) {
       case "today":
         return { start: today, end: new Date(today.getTime() + 86400000) };
-      case "yesterday":
+      case "yesterday": {
         const yesterday = new Date(today.getTime() - 86400000);
         return { start: yesterday, end: today };
-      case "this-week":
+      }
+      case "this-week": {
         const weekStart = new Date(today);
         weekStart.setDate(today.getDate() - today.getDay());
         return { start: weekStart, end: new Date() };
-      case "last-week":
+      }
+      case "last-week": {
         const lastWeekEnd = new Date(today);
         lastWeekEnd.setDate(today.getDate() - today.getDay());
         const lastWeekStart = new Date(lastWeekEnd);
         lastWeekStart.setDate(lastWeekEnd.getDate() - 7);
         return { start: lastWeekStart, end: lastWeekEnd };
+      }
       case "this-month":
         return { start: new Date(now.getFullYear(), now.getMonth(), 1), end: new Date() };
-      case "last-month":
+      case "last-month": {
         const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
         const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
         return { start: lastMonth, end: lastMonthEnd };
-      case "last-3-months":
+      }
+      case "last-3-months": {
         const threeMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 3, 1);
         return { start: threeMonthsAgo, end: new Date() };
+      }
       case "this-year":
         return { start: new Date(now.getFullYear(), 0, 1), end: new Date() };
       default:
