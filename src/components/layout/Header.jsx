@@ -1,19 +1,17 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import { useTheme } from "../../context/ThemeContext";
-import { LogOut, ChevronDown, MoonStar, SunMedium } from "lucide-react";
+import { useAuth } from "../../context/useAuth";
 import { useState, useRef, useEffect } from "react";
-
+import { LogOut, ChevronDown, User, Settings } from "lucide-react";
 export default function Header() {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, signOut } = useAuth();
-  const { theme, toggleTheme } = useTheme();
+
 
   const [profileOpen, setProfileOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -48,6 +46,8 @@ export default function Header() {
     if (path === "/transaction") return "All your transactions";
     if (path === "/insights") return "Spending analytics";
     if (path === "/settings") return "Configure your preferences";
+    if (path === "/profile") return "View and manage your profile";
+    if (path === "/preferences") return "Customize your experience";
     return "";
   };
 
@@ -85,17 +85,8 @@ export default function Header() {
         <p className="text-xs text-[var(--color-fin-muted)] leading-tight">{getPageSubtitle()}</p>
       </div>
 
-      <button
-        type="button"
-        onClick={toggleTheme}
-        className="theme-toggle-button ml-auto inline-flex items-center rounded-full px-3 py-2 transition-all duration-200"
-        aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-      >
-        {theme === 'dark' ? <SunMedium size={14} /> : <MoonStar size={14} />}
-      </button>
-
       {/* ── Profile section ──────────────────────────────────────── */}
-      <div className="flex items-center gap-3 relative" ref={dropdownRef}>
+      <div className="flex items-center gap-3 relative ml-auto" ref={dropdownRef}>
         <button
           onClick={() => setProfileOpen(!profileOpen)}
           className="profile-trigger"
@@ -121,9 +112,14 @@ export default function Header() {
         {/* Dropdown */}
         {profileOpen && (
           <div className="profile-dropdown animate-in">
+            {/* Gradient top bar */}
+            <div className="h-1 w-full rounded-t-xl mb-3"
+              style={{ background: "linear-gradient(90deg, var(--color-fin-accent), #f97316)" }} />
+
             {/* User info */}
             <div className="profile-dropdown-header">
-              <div className="profile-avatar profile-avatar--lg">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-sm font-bold text-white shrink-0"
+                style={{ background: "linear-gradient(135deg, var(--color-fin-accent), #f97316)" }}>
                 {initials}
               </div>
               <div className="profile-dropdown-info">
@@ -134,13 +130,36 @@ export default function Header() {
 
             <div className="profile-dropdown-divider" />
 
-            {/* Sign out */}
+            <button
+              onClick={() => { setProfileOpen(false); navigate("/profile"); }}
+              className="profile-dropdown-item flex items-center gap-3 group"
+            >
+              <div className="p-1.5 rounded-lg bg-[var(--color-fin-accent)]/10 group-hover:bg-[var(--color-fin-accent)]/20 transition-colors">
+                <User size={14} className="text-[var(--color-fin-accent)]" />
+              </div>
+              View Profile
+            </button>
+
+            <button
+              onClick={() => { setProfileOpen(false); navigate("/preferences"); }}
+              className="profile-dropdown-item flex items-center gap-3 group"
+            >
+              <div className="p-1.5 rounded-lg bg-blue-400/10 group-hover:bg-blue-400/20 transition-colors">
+                <Settings size={14} className="text-blue-400" />
+              </div>
+              Preferences
+            </button>
+
+            <div className="profile-dropdown-divider" />
+
             <button
               onClick={handleSignOut}
-              className="profile-dropdown-item profile-dropdown-item--danger"
+              className="profile-dropdown-item profile-dropdown-item--danger flex items-center gap-3 group"
               id="signout-btn"
             >
-              <LogOut size={16} />
+              <div className="p-1.5 rounded-lg bg-red-400/10 group-hover:bg-red-400/20 transition-colors">
+                <LogOut size={14} className="text-red-400" />
+              </div>
               Sign out
             </button>
           </div>

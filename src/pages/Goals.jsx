@@ -1,8 +1,8 @@
 import React from "react";
-import { DataContext } from "../context/AppContext";
+import { DataContext } from "../context/DataContext";
 import { useModal } from "../context/ModalContext";
 import { supabase } from "../lib/supabaseClient";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 export default function Goals() {
   const { transactions, currency } = React.useContext(DataContext);
@@ -18,6 +18,8 @@ export default function Goals() {
   });
 
   const [showForm, setShowForm] = React.useState(false);
+  const [allocationGoalId, setAllocationGoalId] = React.useState(null);
+  const [allocationAmount, setAllocationAmount] = React.useState("");
 
   React.useEffect(() => {
     async function fetchGoals() {
@@ -41,6 +43,9 @@ export default function Goals() {
     return acc + Number(t.Amount);
   }, 0) || 0;
 
+  const totalAllocated = goals.reduce((acc, g) => acc + (Number(g.saved_amount) || 0), 0);
+  const unallocatedSavings = Math.max(0, totalSavings - totalAllocated);
+
   const avgMonthlySavings = React.useMemo(() => {
     if (!transactions || transactions.length === 0) return 0;
     const months = {};
@@ -61,6 +66,7 @@ export default function Goals() {
       name: form.name,
       target: Number(form.target),
       deadline: form.deadline,
+      saved_amount: 0,
     };
 
     const { data, error } = await supabase
@@ -82,7 +88,7 @@ export default function Goals() {
   const handleDelete = (id) => {
     showModal({
       type: "confirm",
-      message: "Are you sure you want to delete this goal?",
+      message: "Are you sure you want to delete this goal? Any allocated funds will be returned to your unallocated savings.",
       onConfirm: async () => {
         setGoals(goals.filter((g) => g.id !== id));
         if (user) {
@@ -92,9 +98,40 @@ export default function Goals() {
     });
   };
 
-  const getProgress = (target) => {
-    if (totalSavings <= 0) return 0;
-    return Math.min((totalSavings / target) * 100, 100);
+  const handleAllocate = async (goalId, isWithdrawal = false) => {
+    const amount = Number(allocationAmount);
+    if (!amount || amount <= 0) return;
+
+    const goal = goals.find(g => g.id === goalId);
+    if (!goal) return;
+
+    const currentSaved = Number(goal.saved_amount) || 0;
+    
+    if (isWithdrawal && amount > currentSaved) {
+      showModal({ type: "alert", message: "Cannot withdraw more than the currently saved amount." });
+      return;
+    }
+    
+    if (!isWithdrawal && amount > unallocatedSavings) {
+      showModal({ type: "alert", message: "Cannot allocate more than your available unallocated savings." });
+      return;
+    }
+
+    const newSavedAmount = isWithdrawal ? currentSaved - amount : currentSaved + amount;
+
+    const updatedGoals = goals.map(g => g.id === goalId ? { ...g, saved_amount: newSavedAmount } : g);
+    setGoals(updatedGoals);
+    setAllocationGoalId(null);
+    setAllocationAmount("");
+
+    if (user) {
+      await supabase.from('goals').update({ saved_amount: newSavedAmount }).eq('id', goalId);
+    }
+  };
+
+  const getProgress = (saved, target) => {
+    if (saved <= 0) return 0;
+    return Math.min((saved / target) * 100, 100);
   };
 
   const getMonthsLeft = (deadline) => {
@@ -106,10 +143,10 @@ export default function Goals() {
     return Math.max(0, months);
   };
 
-  const getMonthlyNeeded = (target, deadline) => {
+  const getMonthlyNeeded = (saved, target, deadline) => {
     const months = getMonthsLeft(deadline);
-    if (months === 0) return target - totalSavings;
-    return Math.max(0, (target - totalSavings) / months);
+    if (months === 0) return target - saved;
+    return Math.max(0, (target - saved) / months);
   };
 
   return (
@@ -192,21 +229,29 @@ export default function Goals() {
       )}
 
       {/* CURRENT SAVINGS BANNER */}
-      <div className="w-full rounded-[24px] border border-[#00C49F]/20 bg-[#0a1a12] p-6 flex items-center justify-between">
+      <div className="w-full rounded-[24px] border border-[#00C49F]/20 bg-[#0a1a12] p-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
           <p className="text-xs font-bold uppercase tracking-widest text-gray-500">
-            Current Total Savings
+            Total Savings
           </p>
-          <p className="text-3xl font-black text-[#00C49F] mt-1">
-            {currency.symbol}{totalSavings.toLocaleString()}
+          <p className="text-3xl font-black text-white mt-1">
+            {currency.symbol}{totalSavings.toFixed(2)}
           </p>
         </div>
-        <div className="text-right">
+        <div>
+          <p className="text-xs font-bold uppercase tracking-widest text-gray-500">
+            Unallocated (Available)
+          </p>
+          <p className="text-3xl font-black text-[#00C49F] mt-1">
+            {currency.symbol}{totalSavings.toFixed(2)}
+          </p>
+        </div>
+        <div className="md:text-right">
           <p className="text-xs font-bold uppercase tracking-widest text-gray-500">
             Avg Monthly Savings
           </p>
           <p className={`text-xl font-black mt-1 ${avgMonthlySavings >= 0 ? "text-[#00C49F]" : "text-[#FF6B6B]"}`}>
-            {currency.symbol}{Math.abs(avgMonthlySavings).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+            {currency.symbol}{Math.abs(avgMonthlySavings).toFixed(0)}
           </p>
         </div>
       </div>
@@ -223,12 +268,13 @@ export default function Goals() {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
           {goals.map((goal) => {
-            const progress = getProgress(goal.target);
+            const saved = Number(goal.saved_amount) || 0;
+            const progress = getProgress(saved, goal.target);
             const monthsLeft = getMonthsLeft(goal.deadline);
-            const monthlyNeeded = getMonthlyNeeded(goal.target, goal.deadline);
-            const isAchieved = totalSavings >= goal.target;
+            const monthlyNeeded = getMonthlyNeeded(saved, goal.target, goal.deadline);
+            const isAchieved = saved >= goal.target;
 
             return (
               <div
@@ -241,7 +287,7 @@ export default function Goals() {
                       {goal.name}
                     </h3>
                     <p className="text-xs text-gray-500 mt-1">
-                      Target: {currency.symbol}{goal.target.toLocaleString()} · Due {new Date(goal.deadline).toLocaleDateString("en-IN", { month: "short", year: "numeric" })}
+                      Target: {currency.symbol}{goal.target.toFixed(2)} · Due {new Date(goal.deadline).toLocaleDateString("en-IN", { month: "short", year: "numeric" })}
                     </p>
                   </div>
                   <button
@@ -256,7 +302,7 @@ export default function Goals() {
                 <div className="space-y-1">
                   <div className="flex justify-between text-xs text-gray-500">
                     <span>{progress.toFixed(1)}% saved</span>
-                    <span>{currency.symbol}{Math.min(totalSavings, goal.target).toLocaleString()} / {currency.symbol}{goal.target.toLocaleString()}</span>
+                    <span>{currency.symbol}{Math.min(totalSavings, goal.target).toFixed(2)} / {currency.symbol}{goal.target.toFixed(2)}</span>
                   </div>
                   <div className="w-full h-3 rounded-full bg-[#222]">
                     <div
@@ -267,25 +313,55 @@ export default function Goals() {
                   </div>
                 </div>
 
-                {/* INSIGHTS */}
-                {isAchieved ? (
-                  <p className="text-[#00C49F] text-xs font-bold uppercase tracking-wider">
-                    🎉 Goal Achieved!
-                  </p>
-                ) : (
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="rounded-xl bg-[#111] p-3">
-                      <p className="text-xs text-gray-500 uppercase tracking-wider">Months Left</p>
-                      <p className="text-white font-black text-lg">{monthsLeft}</p>
+                {/* INSIGHTS & ALLOCATION */}
+                <div className="pt-2">
+                  {allocationGoalId === goal.id && (
+                    <div className="flex gap-2 items-center">
+                      <input 
+                        type="number" 
+                        placeholder="Amount" 
+                        value={allocationAmount}
+                        onChange={(e) => setAllocationAmount(e.target.value)}
+                        className="rounded-lg border border-[#222] bg-[#111] p-2 text-white w-full text-sm"
+                      />
+                      <button onClick={() => handleAllocate(goal.id, false)} className="bg-[#00C49F] text-black px-3 py-2 rounded-lg text-xs font-bold uppercase">Add</button>
+                      <button onClick={() => handleAllocate(goal.id, true)} className="bg-[#FF6B6B] text-black px-3 py-2 rounded-lg text-xs font-bold uppercase">Withdraw</button>
+                      <button onClick={() => setAllocationGoalId(null)} className="text-gray-500 px-2 text-xs uppercase font-bold">Cancel</button>
                     </div>
-                    <div className="rounded-xl bg-[#111] p-3">
-                      <p className="text-xs text-gray-500 uppercase tracking-wider">Need/Month</p>
-                      <p className="text-[#FF6B00] font-black text-lg">
-                        {currency.symbol}{monthlyNeeded.toLocaleString(undefined, { maximumFractionDigits: 0 })}
-                      </p>
+                  )}
+                  {allocationGoalId !== goal.id && (
+                    <div className="flex justify-between items-end">
+                      <div className="flex gap-3">
+                        <div className="rounded-xl bg-[#111] p-3">
+                          <p className="text-xs text-gray-500 uppercase tracking-wider">Months Left</p>
+                          <p className="text-white font-black text-lg">{monthsLeft}</p>
+                        </div>
+                        <div className="rounded-xl bg-[#111] p-3">
+                          <p className="text-xs text-gray-500 uppercase tracking-wider">Need/Month</p>
+                          <p className="text-[#FF6B00] font-black text-lg">
+                            {currency.symbol}{monthlyNeeded.toFixed(0)}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {!isAchieved && (
+                        <button 
+                          onClick={() => { setAllocationGoalId(goal.id); setAllocationAmount(""); }}
+                          className="rounded-lg border border-[#333] hover:border-[#FF6B00] hover:text-[#FF6B00] text-gray-400 px-4 py-2 text-xs font-bold uppercase transition-colors"
+                        >
+                          Manage Funds
+                        </button>
+                      )}
+                      
+                      {isAchieved && (
+                        <p className="text-[#00C49F] text-xs font-bold uppercase tracking-wider">
+                          🎉 Goal Achieved!
+                        </p>
+                      )}
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
+
               </div>
             );
           })}

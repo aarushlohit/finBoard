@@ -1,10 +1,13 @@
 import { useState, useContext } from "react";
 import Papa from "papaparse";
-import { DataContext, CURRENCIES } from "../context/AppContext";
+import { DataContext } from "../context/DataContext";
+import {CURRENCIES} from "../lib/Currencies"
 import { demoData } from "../data/demoData";
 import { normalizeTransactions } from "../lib/transactionNormalizer";
 import { format } from "date-fns";
 import { useModal } from "../context/ModalContext";
+import { supabase } from "../lib/supabaseClient";
+import { useAuth } from "../context/useAuth";
 import { Database, Upload, PenLine, Coins, AlertTriangle, Trash2, CheckCircle2 } from "lucide-react";
 
 // =========================
@@ -61,6 +64,7 @@ export default function Settings() {
   } = useContext(DataContext);
 
   const { showModal } = useModal();
+  const { user } = useAuth();
 
   const [showManualEntry, setShowManualEntry] = useState(true);
   const [importMode, setImportMode] = useState("replace");
@@ -124,17 +128,37 @@ export default function Settings() {
 
         const normalizedData = normalizeTransactions(mapped, { currency, source: 'csv' });
 
-        const updatedData =
-          importMode === "append"
-            ? [...(transactions || []), ...normalizedData]
-            : normalizedData;
+        const processUpload = async () => {
+          if (user) {
+            const dbPayload = normalizedData.map(t => ({
+              user_id: user.id,
+              date: t.Date,
+              amount: t.Amount,
+              description: t.Description,
+              currency: t.Currency
+            }));
+            const { data, error } = await supabase.from('transactions').insert(dbPayload).select();
+            if (data && !error) {
+              normalizedData.forEach((t, idx) => {
+                if (data[idx]) t.id = data[idx].id;
+              });
+            }
+          }
 
-        setTransactions(updatedData);
-        localStorage.setItem("transactions", JSON.stringify(updatedData));
+          const updatedData =
+            importMode === "append"
+              ? [...(transactions || []), ...normalizedData]
+              : normalizedData;
 
-        setLoading(false);
-        setSuccessMessage("CSV Imported Successfully!");
-        setTimeout(() => setSuccessMessage(""), 3000);
+          setTransactions(updatedData);
+          localStorage.setItem("transactions", JSON.stringify(updatedData));
+
+          setLoading(false);
+          setSuccessMessage("CSV Imported Successfully!");
+          setTimeout(() => setSuccessMessage(""), 3000);
+        };
+        
+        processUpload();
       },
 
       error: () => {
@@ -260,14 +284,32 @@ export default function Settings() {
             <p className="text-sm font-bold text-gray-300">Don't have a CSV ready?</p>
             <p className="text-xs text-gray-500 mb-2">Populate your dashboard with realistic demo data to explore all features.</p>
             <button
-                onClick={() => {
+                onClick={async () => {
+                  setLoading(true);
                   const mapped = demoData.map((d) => ({ ...d, source: 'demo' }));
                   const normalized = normalizeTransactions(mapped, { currency, source: 'demo' });
+
+                  if (user) {
+                    const dbPayload = normalized.map(t => ({
+                      user_id: user.id,
+                      date: t.Date,
+                      amount: t.Amount,
+                      description: t.Description,
+                      currency: t.Currency
+                    }));
+                    const { data, error } = await supabase.from('transactions').insert(dbPayload).select();
+                    if (data && !error) {
+                      normalized.forEach((t, idx) => {
+                        if (data[idx]) t.id = data[idx].id;
+                      });
+                    }
+                  }
 
                   const updated = importMode === "append" ? [...(transactions || []), ...normalized] : normalized;
 
                   setTransactions(updated);
                   localStorage.setItem("transactions", JSON.stringify(updated));
+                  setLoading(false);
                   setSuccessMessage("Demo Data Loaded!");
                   setTimeout(() => setSuccessMessage(""), 3000);
                 }}

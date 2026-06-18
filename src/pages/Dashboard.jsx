@@ -1,4 +1,4 @@
-import { DataContext } from "../context/AppContext";
+import { DataContext } from "../context/DataContext";
 import { Link } from "react-router-dom";
 import categorize from "../components/utils/categorize";
 import {
@@ -173,7 +173,7 @@ return (
                     </p>
                     <p className="text-[#00C49F] text-3xl font-black">
                       {currency.symbol}
-                      {totalIncome.toLocaleString()}
+                      {totalIncome.toFixed(2)}
                     </p>
                   </div>
                   <div
@@ -197,7 +197,7 @@ return (
                     </p>
                     <p className="text-[#FF6B6B] text-3xl font-black">
                       {currency.symbol}
-                      {Math.abs(totalExpense).toLocaleString()}
+                      {Math.abs(totalExpense).toFixed(2)}
                     </p>
                   </div>
                   <div
@@ -221,7 +221,7 @@ return (
                     </p>
                     <p className="text-[#0088FE] text-3xl font-black">
                       {currency.symbol}
-                      {savings.toLocaleString()}
+                      {savings.toFixed(2)}
                     </p>
                   </div>
                   <div
@@ -256,7 +256,16 @@ return (
                         <Cell key={index} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: theme === "dark" ? "#1a1a1a" : "#ffffff",
+                        border: `1px solid ${theme === "dark" ? "#2a2a2a" : "#e5e7eb"}`,
+                        borderRadius: "8px",
+                        color: theme === "dark" ? "#f0f0f0" : "#111827",
+                      }}
+                      itemStyle={{ color: theme === "dark" ? "#f0f0f0" : "#111827" }}
+                      labelStyle={{ color: theme === "dark" ? "#888" : "#6b7280", fontWeight: "600" }}
+                    />
                     <Legend />
                   </PieChart>
                 </ResponsiveContainer>
@@ -270,7 +279,17 @@ return (
                   <BarChart data={barData}>
                     <XAxis dataKey="month" />
                     <YAxis />
-                    <Tooltip />
+                    <Tooltip
+                      cursor={{ fill: theme === "dark" ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)" }}
+                      contentStyle={{
+                        backgroundColor: theme === "dark" ? "#1a1a1a" : "#ffffff",
+                        border: `1px solid ${theme === "dark" ? "#2a2a2a" : "#e5e7eb"}`,
+                        borderRadius: "8px",
+                        color: theme === "dark" ? "#f0f0f0" : "#111827",
+                      }}
+                      itemStyle={{ color: theme === "dark" ? "#f0f0f0" : "#111827" }}
+                      labelStyle={{ color: theme === "dark" ? "#888" : "#6b7280", fontWeight: "600" }}
+                    />
                     <Legend />
                     <Bar dataKey="income" fill={theme === "light" ? "#00C49F" : "#00C49F"} />
                     <Bar dataKey="spent" fill={theme === "light" ? "#FF6B00" : "#FF6B6B"} />

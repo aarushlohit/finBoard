@@ -36,6 +36,7 @@ create table public.goals (
   name text not null,
   target numeric not null,
   deadline text not null,
+  saved_amount numeric default 0,
   created_at timestamptz default now()
 );
 
