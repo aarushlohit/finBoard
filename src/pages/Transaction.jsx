@@ -258,6 +258,13 @@ export default function Transaction() {
   }, [searchTerm, datePreset, selectedCategories, sortBy, minAmount, maxAmount]);
 
   const totalPages = Math.ceil(filteredTransactions.length / ITEMS_PER_PAGE);
+  
+  React.useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages);
+    }
+  }, [totalPages, currentPage]);
+
   const paginatedTransactions = filteredTransactions.slice(
     (currentPage - 1) * ITEMS_PER_PAGE,
     currentPage * ITEMS_PER_PAGE
