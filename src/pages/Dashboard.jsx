@@ -102,10 +102,7 @@ const totalExpense = useMemo(() => {
     transactions
       ?.filter((t) => Number(t.Amount) < 0)
       .reduce((acc, item) => {
-        const category =
-          item.category ||
-          item.Category ||
-          categorize(item.Description);
+        const category = item.category || categorize(item.Description);
 
         acc[category] =
           (acc[category] || 0) +
