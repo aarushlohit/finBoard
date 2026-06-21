@@ -1,12 +1,12 @@
 import { ChevronDown, HelpCircle, Search } from "lucide-react";
 
-import csvUploadGuide from "../assets/help/csv-upload-guide.png";
-import goalsGuide from "../assets/help/goals-guide.png";
-import insightsGuide from "../assets/help/insights-guide.png";
-import manualEntryGuide from "../assets/help/manual-entry-guide.png";
-import profileGuide from "../assets/help/profile-guide.png";
-import settingsPreferencesGuide from "../assets/help/settings-preferences-guide.png";
-import transactionsGuide from "../assets/help/transactions-guide.png";
+import csvUploadGuide from "../assets/help/csv-upload-guide.webp";
+import goalsGuide from "../assets/help/goals-guide.webp";
+import insightsGuide from "../assets/help/insights-guide.webp";
+import manualEntryGuide from "../assets/help/manual-entry-guide.webp";
+import profileGuide from "../assets/help/profile-guide.webp";
+import settingsPreferencesGuide from "../assets/help/settings-preferences-guide.webp";
+import transactionsGuide from "../assets/help/transactions-guide.webp";
 
 const guides = [
   {
