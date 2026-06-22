@@ -220,8 +220,7 @@ export default function HelpCenter() {
           </div>
 
          <label
-  className="flex items-center gap-2 rounded-xl border px-3 py-2 text-sm text-[var(--color-fin-muted)] focus-within:ring-2 focus-within:ring-[var(--color-fin-accent)]"
-  style={{ borderColor: "var(--color-fin-border)" }}
+className="flex items-center gap-2 rounded-xl border px-3 py-2 text-sm text-[var(--color-fin-muted)]"  style={{ borderColor: "var(--color-fin-border)" }}
 >
   <Search size={16} />
   <input
