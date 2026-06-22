@@ -1,5 +1,5 @@
+import { useMemo, useState } from "react";
 import { ChevronDown, HelpCircle, Search } from "lucide-react";
-
 import csvUploadGuide from "../assets/help/csv-upload-guide.webp";
 import goalsGuide from "../assets/help/goals-guide.webp";
 import insightsGuide from "../assets/help/insights-guide.webp";
@@ -181,6 +181,26 @@ function AnnotatedGuide({ title, image, imageAlt, secondaryImage, secondaryImage
 }
 
 export default function HelpCenter() {
+    const [searchQuery, setSearchQuery] = useState("");
+
+  const filteredGuides = useMemo(() => {
+    const query = searchQuery.trim().toLowerCase();
+
+    if (!query) return guides;
+
+    return guides.filter((guide) => {
+      const searchableText = [
+        guide.title,
+        guide.description,
+        guide.visualTitle,
+        ...guide.steps,
+      ]
+        .join(" ")
+        .toLowerCase();
+
+      return searchableText.includes(query);
+    });
+  }, [searchQuery]);
   return (
     <main className="p-4 md:p-8 space-y-6">
       <section className="theme-card p-6 rounded-2xl">
@@ -199,18 +219,26 @@ export default function HelpCenter() {
             </p>
           </div>
 
-          <div
-            className="flex items-center gap-2 rounded-xl border px-3 py-2 text-sm text-[var(--color-fin-muted)]"
-            style={{ borderColor: "var(--color-fin-border)" }}
-          >
-            <Search size={16} />
-            Search guides visually from this hub
-          </div>
+         <label
+  className="flex items-center gap-2 rounded-xl border px-3 py-2 text-sm text-[var(--color-fin-muted)] focus-within:ring-2 focus-within:ring-[var(--color-fin-accent)]"
+  style={{ borderColor: "var(--color-fin-border)" }}
+>
+  <Search size={16} />
+  <input
+    type="search"
+    value={searchQuery}
+    onChange={(event) => setSearchQuery(event.target.value)}
+    placeholder="Search Help Center guides..."
+    aria-label="Search Help Center guides"
+    className="w-full min-w-[220px] bg-transparent outline-none text-[var(--color-fin-text)] placeholder:text-[var(--color-fin-muted)]"
+  />
+</label>
         </div>
       </section>
 
       <section className="grid gap-4">
-        {guides.map((guide, index) => (
+       {filteredGuides.length > 0 ? (
+  filteredGuides.map((guide, index) => (
           <details
             key={guide.title}
             className="theme-card rounded-2xl p-5 group"
@@ -243,7 +271,12 @@ export default function HelpCenter() {
               secondaryImageAlt={guide.secondaryImageAlt}
             />
           </details>
-        ))}
+         ))
+) : (
+  <div className="theme-card rounded-2xl p-6 text-center text-[var(--color-fin-muted)]">
+    No results found for "{searchQuery}". Try searching for CSV, goals, insights, profile, or transactions.
+  </div>
+)}
       </section>
     </main>
   );
